@@ -1,6 +1,12 @@
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.*;
+import java.io.File;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 
 public class SrReportGenerator {
@@ -20,9 +26,21 @@ public class SrReportGenerator {
 		
 		/* Build top panel*/
 		filePanel = new JPanel(new FlowLayout());
-		filePathTextField = new JTextField("file path here");
+		filePathTextField = new JTextField("Select xlsx file to parse");
+		filePathTextField.setEnabled(false);
 		filePathTextField.setColumns(50);
 		chooseFileButton = new JButton("Select File");
+		fileChooser = new JFileChooser();
+		chooseFileButton.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  int returnVal = fileChooser.showOpenDialog(frame);
+				  if(returnVal == JFileChooser.APPROVE_OPTION) {
+					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
+					  fileToParse = fileChooser.getSelectedFile();
+					  System.out.println(fileToParse.length());
+				  }
+			  } 
+			} );
 		filePanel.add(filePathTextField);
 		filePanel.add(chooseFileButton);
 		
@@ -34,6 +52,7 @@ public class SrReportGenerator {
 		frame.getContentPane().add(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
+		frame.setLocation(250, 100);
 		frame.setVisible(true);
 		
 	}
@@ -41,4 +60,6 @@ public class SrReportGenerator {
 	 private JPanel mainPanel, filePanel;
 	 private JButton chooseFileButton;
 	 private JTextField filePathTextField;
+	 private JFileChooser fileChooser;
+	 private File fileToParse;
 }
