@@ -3,10 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.File;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+
 
 
 public class SrReportGenerator {
@@ -37,7 +34,9 @@ public class SrReportGenerator {
 				  if(returnVal == JFileChooser.APPROVE_OPTION) {
 					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
 					  fileToParse = fileChooser.getSelectedFile();
-					  System.out.println(fileToParse.length());
+					  dataRetriever = new DataRetriever(fileToParse);
+					  System.out.println("length from dataRetriever: "+dataRetriever.getLength());
+					  
 				  }
 			  } 
 			} );
@@ -62,4 +61,5 @@ public class SrReportGenerator {
 	 private JTextField filePathTextField;
 	 private JFileChooser fileChooser;
 	 private File fileToParse;
+	 private DataRetriever dataRetriever;
 }
