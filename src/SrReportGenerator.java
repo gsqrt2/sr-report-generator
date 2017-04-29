@@ -3,7 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.File;
-
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 
@@ -29,6 +29,8 @@ public class SrReportGenerator {
 		filePathTextField.setColumns(50);
 		chooseFileButton = new JButton("Select File");
 		fileChooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("xlsx files", "xlsx");
+		fileChooser.setFileFilter(filter);
 		chooseFileButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  int returnVal = fileChooser.showOpenDialog(frame);

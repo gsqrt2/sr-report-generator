@@ -20,23 +20,32 @@ public class DataRetriever {
             XSSFSheet sheet = book.getSheetAt(0);
             
             Iterator<Row> itr = sheet.iterator();
-            
+            System.out.println(sheet.getRow(0).getCell(0).toString());
             //Iterating over Excel file in Java
-            while (itr.hasNext()) {
+          /*  while (itr.hasNext()) {
             	Row row = itr.next();
-
+            	
                 //Iterating over each column of Excel file
                 Iterator<Cell> cellIterator = row.cellIterator();
-                while(cellIterator.hasNext()) {
-
-                    Cell cell = cellIterator.next();
-                    System.out.println(cell.toString());
-                    
-                   
-               }
-                System.out.println("");
-            }
-		}
+                if(headersRow)
+                {
+                	System.out.println("Headers:");
+                	while(cellIterator.hasNext()) {
+	                    Cell cell = cellIterator.next();
+	                    System.out.println(cell.toString());
+                	}
+                	headersRow = false;
+                }
+                else
+                {
+                	//System.out.println("Values:");
+	                while(cellIterator.hasNext()) {
+	                    Cell cell = cellIterator.next();
+	                    //System.out.println(cell.toString()); 
+	               }
+                }
+            }*/
+        }
 		catch(IOException ioe)
 		{
 			System.out.println("IOException trying to create fis from xlsx file.");
@@ -48,4 +57,5 @@ public class DataRetriever {
 	}
 	
 	private File dataFile;
+	private boolean headersRow = true;
 }
