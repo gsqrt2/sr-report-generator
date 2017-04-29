@@ -19,23 +19,23 @@ public class DataRetriever {
 			XSSFWorkbook book = new XSSFWorkbook(fis);
             XSSFSheet sheet = book.getSheetAt(0);
             
-          //  Iterator<Row> itr = sheet.iterator();
+            Iterator<Row> itr = sheet.iterator();
             
-         // Iterating over Excel file in Java
-            //while (itr.hasNext()) {
-              //  Row row = itr.next();
+            //Iterating over Excel file in Java
+            while (itr.hasNext()) {
+            	Row row = itr.next();
 
-                // Iterating over each column of Excel file
-                //Iterator<Cell> cellIterator = row.cellIterator();
-               // (cellIterator.hasNext()) {
+                //Iterating over each column of Excel file
+                Iterator<Cell> cellIterator = row.cellIterator();
+                while(cellIterator.hasNext()) {
 
-                    //Cell cell = cellIterator.next();
-                    //System.out.println(cell.toString());
+                    Cell cell = cellIterator.next();
+                    System.out.println(cell.toString());
                     
                    
-               // }
+               }
                 System.out.println("");
-           // }
+            }
 		}
 		catch(IOException ioe)
 		{
