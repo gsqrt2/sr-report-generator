@@ -2,6 +2,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+
 import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,6 +21,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 public class DataRetriever {
 	public DataRetriever(File xlsxFile){
 		dataFile = xlsxFile;
+		readXlsxData();
+		
+	}
+	
+	private void readXlsxData()
+	{
 		try{
 			FileInputStream fis = new FileInputStream(dataFile);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
@@ -50,6 +63,13 @@ public class DataRetriever {
 		{
 			System.out.println("IOException trying to create fis from xlsx file.");
 		}
+	}
+	
+	private void readStructure()
+	{
+		try{
+			
+		}catch(Exception e){System.out.println("Exception reading structure: "+e);}
 	}
 	
 	public long getLength(){
