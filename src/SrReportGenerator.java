@@ -38,7 +38,7 @@ public class SrReportGenerator {
 					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
 					  fileToParse = fileChooser.getSelectedFile();
 					  dataRetriever = new DataRetriever(fileToParse);
-					  System.out.println("length from dataRetriever: "+dataRetriever.getLength());
+					  //System.out.println("length from dataRetriever: "+dataRetriever.getLength());
 					  
 				  }
 			  } 

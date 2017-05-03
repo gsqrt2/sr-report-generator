@@ -20,8 +20,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 public class DataRetriever {
 	public DataRetriever(File xlsxFile){
-		dataFile = xlsxFile;
-		readXlsxData();
+		readStructure();
+		//dataFile = xlsxFile;
+		//readXlsxData();
 		
 	}
 	
@@ -68,14 +69,30 @@ public class DataRetriever {
 	private void readStructure()
 	{
 		try{
-			
-		}catch(Exception e){System.out.println("Exception reading structure: "+e);}
+			File inputFile = new File("data/structure.xml");
+	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	         Document doc = dBuilder.parse(inputFile);
+	         doc.getDocumentElement().normalize();
+	         System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+	         ttlpList =  doc.getDocumentElement().getElementsByTagName("ttlp");
+	         for(int i=0;i<ttlpList.getLength();i++)
+	         {
+	        	 System.out.println(ttlpList.item(i).getChildNodes().item(0).toString());
+	         }
+	         
+	         System.out.println(ttlpList.getLength());
+	         
+		}
+		catch(Exception e)
+		{System.out.println("Exception reading structure: "+e);}
 	}
 	
 	public long getLength(){
 		return dataFile.length();
 	}
 	
-	private File dataFile;
+	private File dataFile, structureXmlFile;
 	private boolean headersRow = true;
+	private NodeList ttlpList;
 }
