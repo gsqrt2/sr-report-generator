@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -20,8 +21,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 public class DataRetriever {
 	public DataRetriever(File xlsxFile){
+		dataFile = xlsxFile;
 		readStructure();
-		//dataFile = xlsxFile;
 		//readXlsxData();
 		
 	}
@@ -75,24 +76,75 @@ public class DataRetriever {
 	         Document doc = dBuilder.parse(inputFile);
 	         doc.getDocumentElement().normalize();
 	         System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-	         ttlpList =  doc.getDocumentElement().getElementsByTagName("ttlp");
-	         for(int i=0;i<ttlpList.getLength();i++)
+	         Element rootElement = doc.getDocumentElement();
+	         Node cleanRootElement = clean(rootElement);
+	         NodeList ttlps = cleanRootElement.getChildNodes();
+	         islandToTtlp = new HashMap<String,String>();
+	         for(int i=0;i<ttlps.getLength();i++)
 	         {
-	        	 System.out.println(ttlpList.item(i).getChildNodes().item(0).toString());
+	        	 Element currentTtlpElement = (Element) ttlps.item(i);
+	        	 System.out.println(currentTtlpElement.getAttribute("name"));
+	        	 String ttlpName = currentTtlpElement.getAttribute("name");
+	        	 NodeList tys = currentTtlpElement.getChildNodes();
+	        	 for(int j=0;j<tys.getLength();j++)
+	        	 {
+	        		 Node currentTyElement = tys.item(j);
+	        		 System.out.println("-> "+currentTyElement.getFirstChild().getTextContent());
+	        		 String islandName = currentTyElement.getFirstChild().getTextContent();
+	        		 islandToTtlp.put(islandName, ttlpName);
+	        	 }
+	        	 
 	         }
-	         
-	         System.out.println(ttlpList.getLength());
-	         
+	         System.out.println(islandToTtlp.size());
 		}
 		catch(Exception e)
-		{System.out.println("Exception reading structure: "+e);}
+		{
+			System.out.println("Exception reading structure: "+e);
+		}
 	}
 	
-	public long getLength(){
-		return dataFile.length();
+	private void readAdditinalLocations()
+	{
+		try
+		{
+			
+			
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception reading additional locaions: "+e);
+		}
 	}
+	
+	
+	private Node clean(Node node)
+	 {
+	   NodeList childNodes = node.getChildNodes();
+
+	   for (int n = childNodes.getLength() - 1; n >= 0; n--)
+	   {
+	      Node child = childNodes.item(n);
+	      short nodeType = child.getNodeType();
+
+	      if (nodeType == Node.ELEMENT_NODE)
+	         clean(child);
+	      else if (nodeType == Node.TEXT_NODE)
+	      {
+	         String trimmedNodeVal = child.getNodeValue().trim();
+	         if (trimmedNodeVal.length() == 0)
+	            node.removeChild(child);
+	         else
+	            child.setNodeValue(trimmedNodeVal);
+	      }
+	      else if (nodeType == Node.COMMENT_NODE)
+	         node.removeChild(child);
+	   }
+	   
+	   return node;
+	 }
 	
 	private File dataFile, structureXmlFile;
 	private boolean headersRow = true;
 	private NodeList ttlpList;
+	private HashMap islandToTtlp;
 }

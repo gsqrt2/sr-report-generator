@@ -1,92 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <structure>
-<main>
-	<td_nison>
-		<ttlp>
-			<name>ΑΡΓΟΣΑΡΩΝΙΚΟΥ</name>
-			<tys>
-				<ty>ΣΑΛΑΜΙΝΑ</ty>
-				<ty>ΑΙΓΙΝΑ</ty>
-				<ty>ΑΓΚΙΣΤΡΙ</ty>
-				<ty>ΠΟΡΟΣ - ΜΕΘΑΝΑ</ty>
-				<ty>ΣΠΕΤΣΕΣ</ty>
-				<ty>ΥΔΡΑ</ty>
-			</tys>
-		</ttlp>
-		<ttlp>
-			<name>ΡΟΔΟΥ</name>
-			<tys>
-				<ty>ΡΟΔΟΣ</ty>
-				<ty>ΚΑΡΠΑΘΟΣ</ty>
-				<ty>ΚΑΣΟΣ</ty>
-				<ty>ΜΕΓΙΣΤΗ</ty>
-				<ty>ΣΥΜΗ</ty>
-				<ty>ΤΗΛΟΣ</ty>
-				<ty>ΧΑΛΚΗ</ty>
-			</tys>
-		</ttlp>
-		<ttlp>
-			<name>ΚΩ</name>
-			<tys>
-				<ty>ΚΩΣ</ty>
-				<ty>ΚΑΛΥΜΝΟΣ</ty>
-				<ty>ΛΕΡΟΣ</ty>
-				<ty>ΑΣΤΥΠΑΛΑΙΑ</ty>
-				<ty>ΠΑΤΜΟΣ</ty>
-				<ty>ΝΙΣΥΡΟΣ</ty>
-				<ty>ΛΕΙΨΟΙ</ty>
-				<ty>ΑΓΑΘΟΝΗΣΙ</ty>
-				<ty>ΨΕΡΙΜΟΣ</ty>
-			</tys>
-		</ttlp>
-		<ttlp>
-			<name>ΣΑΜΟΥ</name>
-			<tys>
-				<ty>ΣΑΜΟΣ</ty>
-				<ty>ΙΚΑΡΙΑ</ty>
-				<ty>ΦΟΥΡΝΟΙ</ty>
-			</tys>
-		</ttlp>
-		<ttlp>
-			<name>ΧΙΟΥ</name>
-			<tys>
-				<ty>ΧΙΟΣ</ty>
-				<ty>ΟΙΝΟΥΣΕΣ</ty>
-				<ty>ΨΑΡΑ</ty>
-			</tys>
-		</ttlp>
-		<ttlp>
-			<name>ΚΥΚΛΑΔΩΝ</name>
-			<tys>
-				<ty>ΘΗΡΑ</ty>
-				<ty>ΜΥΚΟΝΟΣ</ty>
-				<ty>ΝΑΞΟΣ</ty>
-				<ty>ΠΑΡΟΣ</ty>
-				<ty>ΣΥΡΟΣ</ty>
-				<ty>ΑΜΟΡΓΟΣ</ty>
-				<ty>ΑΝΔΡΟΣ</ty>
-				<ty>ΙΟΣ</ty>
-				<ty>ΚΕΑ</ty>
-				<ty>ΚΥΘΝΟΣ</ty>
-				<ty>ΜΗΛΟΣ</ty>
-				<ty>ΣΕΡΙΦΟΣ</ty>
-				<ty>ΣΙΦΝΟΣ</ty>
-				<ty>ΤΗΝΟΣ</ty>
-				<ty>ΑΝΑΦΗ</ty>
-				<ty>ΑΝΤΙΠΑΡΟΣ</ty>
-				<ty>ΔΟΝΟΥΣΑ</ty>
-				<ty>ΗΡΑΚΛΕΙΑ</ty>
-				<ty>ΘΗΡΑΣΙΑ</ty>
-				<ty>ΚΙΜΩΛΟΣ</ty>
-				<ty>ΚΟΥΦΟΝΗΣΙ</ty>
-				<ty>ΣΙΚΙΝΟΣ</ty>
-				<ty>ΣΧΟΙΝΟΥΣΑ</ty>
-				<ty>ΦΟΛΕΓΑΝΔΡΟΣ</ty>
-			</tys>
-		</ttlp>
-	</td_nison>
-</main>
-<extra>
-
-</extra>
+	<ttlp name="ΑΡΓΟΣΑΡΩΝΙΚΟΥ">
+		<ty>ΣΑΛΑΜΙΝΑ</ty>
+		<ty>ΑΙΓΙΝΑ</ty>
+		<ty>ΑΓΚΙΣΤΡΙ</ty>
+		<ty>ΠΟΡΟΣ - ΜΕΘΑΝΑ</ty>
+		<ty>ΣΠΕΤΣΕΣ</ty>
+		<ty>ΥΔΡΑ</ty>
+	</ttlp>
+	<ttlp name="ΡΟΔΟΥ">
+		<ty>ΡΟΔΟΣ</ty>
+		<ty>ΚΑΡΠΑΘΟΣ</ty>
+		<ty>ΚΑΣΟΣ</ty>
+		<ty>ΜΕΓΙΣΤΗ</ty>
+		<ty>ΣΥΜΗ</ty>
+		<ty>ΤΗΛΟΣ</ty>
+		<ty>ΧΑΛΚΗ</ty>
+	</ttlp>
+	<ttlp name="ΚΩ">
+		<ty>ΚΩΣ</ty>
+		<ty>ΚΑΛΥΜΝΟΣ</ty>
+		<ty>ΛΕΡΟΣ</ty>
+		<ty>ΑΣΤΥΠΑΛΑΙΑ</ty>
+		<ty>ΠΑΤΜΟΣ</ty>
+		<ty>ΝΙΣΥΡΟΣ</ty>
+		<ty>ΛΕΙΨΟΙ</ty>
+		<ty>ΑΓΑΘΟΝΗΣΙ</ty>
+		<ty>ΨΕΡΙΜΟΣ</ty>
+	</ttlp>
+	<ttlp name="ΣΑΜΟΥ">
+		<ty>ΣΑΜΟΣ</ty>
+		<ty>ΙΚΑΡΙΑ</ty>
+		<ty>ΦΟΥΡΝΟΙ</ty>
+	</ttlp>
+	<ttlp name="ΧΙΟΥ">
+		<ty>ΧΙΟΣ</ty>
+		<ty>ΟΙΝΟΥΣΕΣ</ty>
+		<ty>ΨΑΡΑ</ty>
+	</ttlp>
+	<ttlp name="ΚΥΚΛΑΔΩΝ">
+		<ty>ΘΗΡΑ</ty>
+		<ty>ΜΥΚΟΝΟΣ</ty>
+		<ty>ΝΑΞΟΣ</ty>
+		<ty>ΠΑΡΟΣ</ty>
+		<ty>ΣΥΡΟΣ</ty>
+		<ty>ΑΜΟΡΓΟΣ</ty>
+		<ty>ΑΝΔΡΟΣ</ty>
+		<ty>ΙΟΣ</ty>
+		<ty>ΚΕΑ</ty>
+		<ty>ΚΥΘΝΟΣ</ty>
+		<ty>ΜΗΛΟΣ</ty>
+		<ty>ΣΕΡΙΦΟΣ</ty>
+		<ty>ΣΙΦΝΟΣ</ty>
+		<ty>ΤΗΝΟΣ</ty>
+		<ty>ΑΝΑΦΗ</ty>
+		<ty>ΑΝΤΙΠΑΡΟΣ</ty>
+		<ty>ΔΟΝΟΥΣΑ</ty>
+		<ty>ΗΡΑΚΛΕΙΑ</ty>
+		<ty>ΘΗΡΑΣΙΑ</ty>
+		<ty>ΚΙΜΩΛΟΣ</ty>
+		<ty>ΚΟΥΦΟΝΗΣΙ</ty>
+		<ty>ΣΙΚΙΝΟΣ</ty>
+		<ty>ΣΧΟΙΝΟΥΣΑ</ty>
+		<ty>ΦΟΛΕΓΑΝΔΡΟΣ</ty>
+	</ttlp>
 </structure>

@@ -4,8 +4,12 @@ import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.Document;
 
+import org.w3c.dom.Element;
 
 public class SrReportGenerator {
 
@@ -37,9 +41,7 @@ public class SrReportGenerator {
 				  if(returnVal == JFileChooser.APPROVE_OPTION) {
 					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
 					  fileToParse = fileChooser.getSelectedFile();
-					  dataRetriever = new DataRetriever(fileToParse);
-					  //System.out.println("length from dataRetriever: "+dataRetriever.getLength());
-					  
+					  dataRetriever = new DataRetriever(fileToParse);				  
 				  }
 			  } 
 			} );
@@ -58,6 +60,8 @@ public class SrReportGenerator {
 		frame.setVisible(true);
 		
 	}
+	 
+
 	 private JFrame frame;
 	 private JPanel mainPanel, filePanel;
 	 private JButton chooseFileButton;
