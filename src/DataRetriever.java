@@ -22,8 +22,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 public class DataRetriever {
 	public DataRetriever(File xlsxFile){
 		dataFile = xlsxFile;
+		islandToTtlp = new HashMap<String,String>();
+		additionalLocations = new HashMap<String,String>();
+		
 		readStructure();
-		//readXlsxData();
+		readAdditinalLocations();
+		readXlsxData();
 		
 	}
 	
@@ -35,31 +39,27 @@ public class DataRetriever {
             XSSFSheet sheet = book.getSheetAt(0);
             
             Iterator<Row> itr = sheet.iterator();
-            System.out.println(sheet.getRow(0).getCell(0).toString());
+            //System.out.println(sheet.getRow(0).getCell(0).toString());
             //Iterating over Excel file in Java
-          /*  while (itr.hasNext()) {
+            while (itr.hasNext() && validXlsxFormat) {
             	Row row = itr.next();
-            	
-                //Iterating over each column of Excel file
-                Iterator<Cell> cellIterator = row.cellIterator();
+
                 if(headersRow)
                 {
-                	System.out.println("Headers:");
-                	while(cellIterator.hasNext()) {
-	                    Cell cell = cellIterator.next();
-	                    System.out.println(cell.toString());
-                	}
+                	checkXlsxHeaders(row);
                 	headersRow = false;
                 }
                 else
                 {
                 	//System.out.println("Values:");
-	                while(cellIterator.hasNext()) {
-	                    Cell cell = cellIterator.next();
+	                //while(cellIterator.hasNext()) {
+	                    //Cell cell = cellIterator.next();
 	                    //System.out.println(cell.toString()); 
-	               }
+	              // }
+                	System.out.println("counting stuff");
                 }
-            }*/
+            }
+            book.close();
         }
 		catch(IOException ioe)
 		{
@@ -75,27 +75,27 @@ public class DataRetriever {
 	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	         Document doc = dBuilder.parse(inputFile);
 	         doc.getDocumentElement().normalize();
-	         System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+	         //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 	         Element rootElement = doc.getDocumentElement();
 	         Node cleanRootElement = clean(rootElement);
 	         NodeList ttlps = cleanRootElement.getChildNodes();
-	         islandToTtlp = new HashMap<String,String>();
+	         
 	         for(int i=0;i<ttlps.getLength();i++)
 	         {
 	        	 Element currentTtlpElement = (Element) ttlps.item(i);
-	        	 System.out.println(currentTtlpElement.getAttribute("name"));
+	        	 //System.out.println(currentTtlpElement.getAttribute("name"));
 	        	 String ttlpName = currentTtlpElement.getAttribute("name");
 	        	 NodeList tys = currentTtlpElement.getChildNodes();
 	        	 for(int j=0;j<tys.getLength();j++)
 	        	 {
 	        		 Node currentTyElement = tys.item(j);
-	        		 System.out.println("-> "+currentTyElement.getFirstChild().getTextContent());
+	        		 //System.out.println("-> "+currentTyElement.getFirstChild().getTextContent());
 	        		 String islandName = currentTyElement.getFirstChild().getTextContent();
 	        		 islandToTtlp.put(islandName, ttlpName);
 	        	 }
 	        	 
 	         }
-	         System.out.println(islandToTtlp.size());
+	         //System.out.println(islandToTtlp.size());
 		}
 		catch(Exception e)
 		{
@@ -108,11 +108,60 @@ public class DataRetriever {
 		try
 		{
 			
+			File inputFile = new File("data/additional.xml");
+	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	         Document doc = dBuilder.parse(inputFile);
+	         doc.getDocumentElement().normalize();
+	         Element rootElement = doc.getDocumentElement();
+	         Node cleanRootElement = clean(rootElement);
+	         NodeList locations = cleanRootElement.getChildNodes();
+	         for(int i=0;i<locations.getLength();i++)
+	         {
+	        	 Element currentElement = (Element) locations.item(i);
+	        	 //System.out.println(currentElement.getAttribute("name")+" -> "+currentElement.getAttribute("parent"));
+	        	 additionalLocations.put("name", "parent");
+	         }
 			
 		}
 		catch(Exception e)
 		{
 			System.out.println("Exception reading additional locaions: "+e);
+		}
+	}
+	
+	private void checkXlsxHeaders(Row headersRow)
+	{
+		Iterator<Cell> cellIterator = headersRow.cellIterator();
+		int cellNo = 0;
+		while(cellIterator.hasNext()) {
+			Cell cell = cellIterator.next();
+			String currentColumnTitle = cell.getStringCellValue();
+			switch(currentColumnTitle)
+			{
+				case "Õ«”…": 
+					islandCol = cellNo;
+					break;
+					
+				case "«Ã/Õ…¡ —¡Õ‘≈¬œ’":
+					appointmentDateCol = cellNo;
+					break;
+					
+				case "≈Ò„·Ûﬂ·":
+					taskTypeCol = cellNo;
+					break;
+				
+				case " ·Ù‹ÛÙ·ÛÁ":
+					statusCol = cellNo;
+					break;
+			}
+			cellNo++;
+		}
+		System.out.println(""+islandCol+"-"+appointmentDateCol+"-"+taskTypeCol+"-"+statusCol);
+		if((islandCol == null) || (appointmentDateCol == null) || (taskTypeCol == null) || (statusCol == null))
+		{
+			validXlsxFormat = false;
+			//System.out.println("Xlsx headers not recognized.");
 		}
 	}
 	
@@ -144,7 +193,8 @@ public class DataRetriever {
 	 }
 	
 	private File dataFile, structureXmlFile;
-	private boolean headersRow = true;
+	private boolean headersRow = true, validXlsxFormat = true;
 	private NodeList ttlpList;
-	private HashMap islandToTtlp;
+	private HashMap islandToTtlp, additionalLocations;
+	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
 }
