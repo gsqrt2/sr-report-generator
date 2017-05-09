@@ -2,6 +2,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.LinkedHashSet;
+
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -27,8 +30,12 @@ public class DataRetriever {
 		
 		readStructure();
 		readAdditinalLocations();
+		set = new LinkedHashSet<String>();
 		readXlsxData();
 		
+		
+		for(String type : set)
+			System.out.println(type);
 	}
 	
 	private void readXlsxData()
@@ -37,6 +44,8 @@ public class DataRetriever {
 			FileInputStream fis = new FileInputStream(dataFile);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
             XSSFSheet sheet = book.getSheetAt(0);
+            
+            
             
             Iterator<Row> itr = sheet.iterator();
             //System.out.println(sheet.getRow(0).getCell(0).toString());
@@ -51,12 +60,11 @@ public class DataRetriever {
                 }
                 else
                 {
-                	//System.out.println("Values:");
-	                //while(cellIterator.hasNext()) {
-	                    //Cell cell = cellIterator.next();
-	                    //System.out.println(cell.toString()); 
-	              // }
-                	System.out.println("counting stuff");
+                	//System.out.println(row.getCell(islandCol).toString()+" - "+row.getCell(taskTypeCol).toString());
+                	String currentTaskType = (String) row.getCell(taskTypeCol).toString();
+                	set.add(currentTaskType);
+                	/*ta mdf kai ta pedia metrane gia mia i gia dyo tasks?
+                	 * xreiazomai paradeigma apo alloy eidoys douleies opws syndyastika rantevou, ipvpn kai kalwdiakes an metrane*/
                 }
             }
             book.close();
@@ -197,4 +205,6 @@ public class DataRetriever {
 	private NodeList ttlpList;
 	private HashMap islandToTtlp, additionalLocations;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
+	private Set<String> set;
+
 }
