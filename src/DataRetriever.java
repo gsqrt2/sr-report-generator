@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.LinkedHashSet;
-
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -30,12 +30,16 @@ public class DataRetriever {
 		
 		readStructure();
 		readAdditinalLocations();
-		set = new LinkedHashSet<String>();
+		readTaskTypes();
+		//set = new LinkedHashSet<String>();
 		readXlsxData();
 		
 		
-		for(String type : set)
-			System.out.println(type);
+		Map<String, String> map = taskTypesHash;
+				for (Map.Entry<String, String> entry : map.entrySet())
+				{
+				    System.out.println(entry.getKey() + "/" + entry.getValue());
+				}
 	}
 	
 	private void readXlsxData()
@@ -78,15 +82,8 @@ public class DataRetriever {
 	private void readStructure()
 	{
 		try{
-			File inputFile = new File("data/structure.xml");
-	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	         Document doc = dBuilder.parse(inputFile);
-	         doc.getDocumentElement().normalize();
-	         //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-	         Element rootElement = doc.getDocumentElement();
-	         Node cleanRootElement = clean(rootElement);
-	         NodeList ttlps = cleanRootElement.getChildNodes();
+			 Node structureRootNode = getRootNodeFromXml("structure.xml");
+	         NodeList ttlps = structureRootNode.getChildNodes();
 	         
 	         for(int i=0;i<ttlps.getLength();i++)
 	         {
@@ -111,19 +108,25 @@ public class DataRetriever {
 		}
 	}
 	
+	private void readTaskTypes()
+	{
+		Node taskTypesRootNode = getRootNodeFromXml("taskTypes.xml");
+		NodeList taskTypeNodes = taskTypesRootNode.getChildNodes();
+		for(int i=0;i<taskTypeNodes.getLength();i++)
+		{
+			Element currentTaskTypeElement = (Element) taskTypeNodes.item(i);
+			//System.out.println(currentTaskTypeElement.getAttribute("name"));
+			//taskTypesHash.put(currentTaskTypeElement.getAttribute("name"), currentTaskTypeElement.getAttribute("type"));
+		}	
+	}
+	
 	private void readAdditinalLocations()
 	{
 		try
 		{
 			
-			File inputFile = new File("data/additional.xml");
-	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	         Document doc = dBuilder.parse(inputFile);
-	         doc.getDocumentElement().normalize();
-	         Element rootElement = doc.getDocumentElement();
-	         Node cleanRootElement = clean(rootElement);
-	         NodeList locations = cleanRootElement.getChildNodes();
+			 Node additionalLocationRootNode = getRootNodeFromXml("additional.xml");
+	         NodeList locations = additionalLocationRootNode.getChildNodes();
 	         for(int i=0;i<locations.getLength();i++)
 	         {
 	        	 Element currentElement = (Element) locations.item(i);
@@ -135,6 +138,29 @@ public class DataRetriever {
 		catch(Exception e)
 		{
 			System.out.println("Exception reading additional locaions: "+e);
+		}
+	}
+	
+	
+	
+	private Node getRootNodeFromXml(String xmlFileName)
+	{
+		try
+		{
+			File inputFile = new File("data/"+xmlFileName);
+	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	         Document doc = dBuilder.parse(inputFile);
+	         doc.getDocumentElement().normalize();
+	         Element rootElement = doc.getDocumentElement();
+	         Node cleanRootElement = clean(rootElement);
+	         
+	         return cleanRootElement;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception reading xml file "+xmlFileName+": "+e);
+			return null;
 		}
 	}
 	
@@ -203,7 +229,7 @@ public class DataRetriever {
 	private File dataFile, structureXmlFile;
 	private boolean headersRow = true, validXlsxFormat = true;
 	private NodeList ttlpList;
-	private HashMap islandToTtlp, additionalLocations;
+	private HashMap islandToTtlp, additionalLocations, taskTypesHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
 	private Set<String> set;
 

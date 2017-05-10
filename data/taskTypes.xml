@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskTypes>
+	<task name="ΕΓΚΑΤΑΣΤΑΣΗ ΕΞΟΠΛΙΣΜΟΥ VOBB" type="connection"/>
+	<task name="Ν.Σ VoBB" type="connection"/>
+	<task name="ΜΕΤΑΤΡΟΠΗ TDM σε VoBB (MDF)" type="connection"/>
+	<task name="Ν.Σ. xDSL (MDF)" type="connection"/>
+	<task name="Ν.Σ VoBB (MDF)" type="connection"/>
+	<task name="ΕΓΚΑΤΑΣΤΑΣΗ ΕΞΟΠΛΙΣΜΟΥ" type="connection"/>
+	<task name="ΕΠΙ ΤΟΠΟΥ ΠΡΟΜΕΤΡΗΣΗ" type="ignore"/>
+	<task name="Ν.Σ. ΤΗΛΕΦΩΝΙΑΣ με xDSL" type="connection"/>
+	<task name="ΜΤΦ VoBB" type="connection"/>
+	<task name="Ν.Σ. ΤΗΛΕΦΩΝΙΑΣ με xDSL (MDF)" type="connection"/>
+	<task name="ΑΛΛΑΓΗ ΠΟΡΤΑΣ DSLAM (MDF)" type="connection"/>
+	<task name="ΜΕΤΑΤΡΟΠΗ IP" type="connection"/>
+	<task name="ΜΤΦ" type=""/>
+	<task name="Ν.Σ. ΤΗΛΕΦΩΝΙΑΣ" type="connection"/>
+	<task name="ΑΛΛΑΓΗ ΠΑΡΟΧΟΥ (MDF)" type="connection"/>
+	<task name="ΕΠΙ ΤΟΠΟΥ ΠΡΟΜΕΤΡΗΣΗ (LLU)" type="ignore"/>
+	<task name="ΚΑΤΑΡΓΗΣΗ ΒΡΟΧΟΥ (MDF)" type="connection"/>
+	<task name="ΚΑΤΑΣΚΕΥΗ ΒΡΟΧΟΥ" type="connection"/>
+	<task name="ΚΑΤΑΣΚΕΥΗ ΠΤοΒ (MDF)" type="connection"/>
+	<task name="ΑΛΛΑΓΗ ΟΡΙΟΥ ΒΡΟΧΟΥ (MDF)" type="connection"/>
+	<task name="ΒΛΑΒΗ VoBB" type="service"/>
+	<task name="ΒΛΑΒΗ ΤΗΛΕΦΩΝΙΑΣ" type="service"/>
+	<task name="ΒΛΑΒΗ IPVPN/DIA/E-LINE  XDSL" type="service"/>
+	<task name="ΒΛΑΒΗ LLU" type="service"/>
+</taskTypes>
