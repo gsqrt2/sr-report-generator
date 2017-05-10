@@ -25,21 +25,15 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 public class DataRetriever {
 	public DataRetriever(File xlsxFile){
 		dataFile = xlsxFile;
-		islandToTtlp = new HashMap<String,String>();
-		additionalLocations = new HashMap<String,String>();
+		islandToTtlpHash = new HashMap<String,String>();
+		additionalLocationsHash = new HashMap<String,String>();
 		
 		readStructure();
 		readAdditinalLocations();
+
 		readTaskTypes();
-		//set = new LinkedHashSet<String>();
 		readXlsxData();
 		
-		
-		Map<String, String> map = taskTypesHash;
-				for (Map.Entry<String, String> entry : map.entrySet())
-				{
-				    System.out.println(entry.getKey() + "/" + entry.getValue());
-				}
 	}
 	
 	private void readXlsxData()
@@ -48,7 +42,8 @@ public class DataRetriever {
 			FileInputStream fis = new FileInputStream(dataFile);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
             XSSFSheet sheet = book.getSheetAt(0);
-            
+            int currentRow = 1;
+            System.out.println("sheet size: "+sheet.getLastRowNum());
             
             
             Iterator<Row> itr = sheet.iterator();
@@ -63,13 +58,59 @@ public class DataRetriever {
                 	headersRow = false;
                 }
                 else
-                {
-                	//System.out.println(row.getCell(islandCol).toString()+" - "+row.getCell(taskTypeCol).toString());
-                	String currentTaskType = (String) row.getCell(taskTypeCol).toString();
-                	set.add(currentTaskType);
+                {                	
                 	/*ta mdf kai ta pedia metrane gia mia i gia dyo tasks?
                 	 * xreiazomai paradeigma apo alloy eidoys douleies opws syndyastika rantevou, ipvpn kai kalwdiakes an metrane*/
+                	
+                	/* CHECK LOCATION AND HANDLE IF UNRECOGNIZED*/
+                	
+                	String currentIsland = (String) row.getCell(islandCol).toString();
+                	
+                	
+                	if(islandToTtlpHash.get(currentIsland) != null)
+                	{
+                		
+                	}
+                	else
+                	{
+                		//System.out.println("not a known location: "+currentIsland);
+                		if(additionalLocationsHash.get(currentIsland) != null)
+                		{
+                			System.out.println(currentIsland+" found in "+additionalLocationsHash.get(currentIsland));
+                		}
+                		else
+                		{
+                			System.out.println("handle uknown location");
+                		}
+                		
+                	}
+                	
+                			
+                	/* CHECK TASK TYPE AND HANDLE IF UNRECOGNIZED*/		
+                	String currentTaskTypeDescription = (String) row.getCell(taskTypeCol).toString();
+                	String currentTaskType = (String) taskTypesHash.get(currentTaskTypeDescription);
+                	
+                	if(currentTaskType.equals("connection"))
+                	{
+                		//System.out.println("new connection");
+                	}
+                	else
+                	if(currentTaskType.equals("service"))
+                	{
+                		//System.out.println("new service");
+                	}
+                	else
+                	if(currentTaskType.equals("ignore"))
+                	{
+                		//System.out.println("IGNORED!!!!");
+                	}
+                	else
+                	{
+                		System.out.println("Unrecognized task type: '"+currentTaskType+"', at row "+currentRow);
+                	}			
                 }
+                
+                currentRow++;
             }
             book.close();
         }
@@ -96,7 +137,7 @@ public class DataRetriever {
 	        		 Node currentTyElement = tys.item(j);
 	        		 //System.out.println("-> "+currentTyElement.getFirstChild().getTextContent());
 	        		 String islandName = currentTyElement.getFirstChild().getTextContent();
-	        		 islandToTtlp.put(islandName, ttlpName);
+	        		 islandToTtlpHash.put(islandName, ttlpName);
 	        	 }
 	        	 
 	         }
@@ -112,11 +153,12 @@ public class DataRetriever {
 	{
 		Node taskTypesRootNode = getRootNodeFromXml("taskTypes.xml");
 		NodeList taskTypeNodes = taskTypesRootNode.getChildNodes();
+		taskTypesHash = new HashMap<String, String>();
 		for(int i=0;i<taskTypeNodes.getLength();i++)
 		{
 			Element currentTaskTypeElement = (Element) taskTypeNodes.item(i);
 			//System.out.println(currentTaskTypeElement.getAttribute("name"));
-			//taskTypesHash.put(currentTaskTypeElement.getAttribute("name"), currentTaskTypeElement.getAttribute("type"));
+			taskTypesHash.put(currentTaskTypeElement.getAttribute("name"), currentTaskTypeElement.getAttribute("type"));
 		}	
 	}
 	
@@ -130,8 +172,8 @@ public class DataRetriever {
 	         for(int i=0;i<locations.getLength();i++)
 	         {
 	        	 Element currentElement = (Element) locations.item(i);
-	        	 //System.out.println(currentElement.getAttribute("name")+" -> "+currentElement.getAttribute("parent"));
-	        	 additionalLocations.put("name", "parent");
+	        	 System.out.println(currentElement.getAttribute("name")+" -> "+currentElement.getAttribute("parent"));
+	        	 additionalLocationsHash.put(currentElement.getAttribute("name"), currentElement.getAttribute("parent"));
 	         }
 			
 		}
@@ -191,11 +233,11 @@ public class DataRetriever {
 			}
 			cellNo++;
 		}
-		System.out.println(""+islandCol+"-"+appointmentDateCol+"-"+taskTypeCol+"-"+statusCol);
+		//System.out.println(""+islandCol+"-"+appointmentDateCol+"-"+taskTypeCol+"-"+statusCol);
 		if((islandCol == null) || (appointmentDateCol == null) || (taskTypeCol == null) || (statusCol == null))
 		{
 			validXlsxFormat = false;
-			//System.out.println("Xlsx headers not recognized.");
+			System.out.println("Xlsx headers not recognized.");
 		}
 	}
 	
@@ -229,8 +271,7 @@ public class DataRetriever {
 	private File dataFile, structureXmlFile;
 	private boolean headersRow = true, validXlsxFormat = true;
 	private NodeList ttlpList;
-	private HashMap islandToTtlp, additionalLocations, taskTypesHash;
+	private HashMap islandToTtlpHash, additionalLocationsHash, taskTypesHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
-	private Set<String> set;
 
 }

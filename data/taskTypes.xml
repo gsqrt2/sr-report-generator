@@ -12,7 +12,7 @@
 	<task name="Ν.Σ. ΤΗΛΕΦΩΝΙΑΣ με xDSL (MDF)" type="connection"/>
 	<task name="ΑΛΛΑΓΗ ΠΟΡΤΑΣ DSLAM (MDF)" type="connection"/>
 	<task name="ΜΕΤΑΤΡΟΠΗ IP" type="connection"/>
-	<task name="ΜΤΦ" type=""/>
+	<task name="ΜΤΦ" type="connection"/>
 	<task name="Ν.Σ. ΤΗΛΕΦΩΝΙΑΣ" type="connection"/>
 	<task name="ΑΛΛΑΓΗ ΠΑΡΟΧΟΥ (MDF)" type="connection"/>
 	<task name="ΕΠΙ ΤΟΠΟΥ ΠΡΟΜΕΤΡΗΣΗ (LLU)" type="ignore"/>
