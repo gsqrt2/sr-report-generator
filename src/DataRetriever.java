@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import javax.swing.JFrame;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.BorderFactory;
+import java.awt.Color;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,13 +29,31 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 
 public class DataRetriever {
-	public DataRetriever(){
-		
+	public DataRetriever(JFrame parentFrame){
+		appFrame = parentFrame;
+		openDialog();
+		dataRetrieverDialog = new JDialog();
 		islandToTtlpHash = new HashMap<String,String>();
 		additionalLocationsHash = new HashMap<String,String>();
 		readStructure();
 		readAdditinalLocations();
 		readTaskTypes();
+	}
+	
+	private void openDialog()
+	{
+		dialogFrame = new JDialog(appFrame, true);
+		dialogFrame.setLocationRelativeTo(null);
+		dialogFrame.setUndecorated(true);
+		JPanel dialogPanel = new JPanel();
+		dialogPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		dialogText = new JLabel("This is the dialog text");
+		dialogPanel.add(dialogText);
+		dialogFrame.add(dialogPanel);
+		
+		dialogFrame.pack();
+		dialogFrame.setVisible(true);
+		
 	}
 	
 	public void retrieveData(File xlsxFile)
@@ -270,6 +294,10 @@ public class DataRetriever {
 	   return node;
 	 }
 	
+	private JLabel dialogText;
+	private JDialog dialogFrame;
+	private JFrame appFrame;
+	private JDialog dataRetrieverDialog;
 	private File dataFile, structureXmlFile;
 	private boolean headersRow = true, validXlsxFormat = true;
 	private NodeList ttlpList;

@@ -43,7 +43,7 @@ public class SrReportGenerator {
 					  fileToParse = fileChooser.getSelectedFile();
 					  
 					  if(dataRetriever == null)
-						  dataRetriever = new DataRetriever();
+						  dataRetriever = new DataRetriever(frame);
 					  
 					  dataRetriever.retrieveData(fileToParse);
 					  
