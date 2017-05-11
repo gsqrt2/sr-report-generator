@@ -41,8 +41,12 @@ public class SrReportGenerator {
 				  if(returnVal == JFileChooser.APPROVE_OPTION) {
 					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
 					  fileToParse = fileChooser.getSelectedFile();
-					  dataRetriever = new DataRetriever(fileToParse);
-					  sendReport();
+					  
+					  if(dataRetriever == null)
+						  dataRetriever = new DataRetriever();
+					  
+					  dataRetriever.retrieveData(fileToParse);
+					  
 				  }
 			  } 
 			} );
@@ -63,8 +67,19 @@ public class SrReportGenerator {
 	 
 	 private void sendReport()
 	 {
-		 sendMailSSL = new SendMailSSL();
-		 sendMailSSL.sendMail("geia sou re mastora", "gmarios@ote.gr");
+		 String htmlText = "<table border='1'>"
+		 		+ "<tr>"
+				 	+"<td>h1 <h1>text</h1></td>"
+		 		+"</tr>"
+		 		+ "</table>";
+		 if(sendMailSSL == null)
+		 {	 
+			 sendMailSSL = new SendMailSSL();
+			 System.out.println("created mailer instance");
+		 }
+
+		 sendMailSSL.sendMail(htmlText, "gsqrt2@gmail.com");
+
 	 }
 
 	 private JFrame frame;

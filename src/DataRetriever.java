@@ -23,17 +23,19 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 
 public class DataRetriever {
-	public DataRetriever(File xlsxFile){
-		dataFile = xlsxFile;
+	public DataRetriever(){
+		
 		islandToTtlpHash = new HashMap<String,String>();
 		additionalLocationsHash = new HashMap<String,String>();
-		
 		readStructure();
 		readAdditinalLocations();
-
 		readTaskTypes();
+	}
+	
+	public void retrieveData(File xlsxFile)
+	{
+		dataFile = xlsxFile;
 		readXlsxData();
-		
 	}
 	
 	private void readXlsxData()
