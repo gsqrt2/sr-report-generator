@@ -41,7 +41,8 @@ public class SrReportGenerator {
 				  if(returnVal == JFileChooser.APPROVE_OPTION) {
 					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
 					  fileToParse = fileChooser.getSelectedFile();
-					  dataRetriever = new DataRetriever(fileToParse);				  
+					  dataRetriever = new DataRetriever(fileToParse);
+					  sendReport();
 				  }
 			  } 
 			} );
@@ -57,10 +58,14 @@ public class SrReportGenerator {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setLocation(250, 100);
-		frame.setVisible(true);
-		
+		frame.setVisible(true);	
 	}
 	 
+	 private void sendReport()
+	 {
+		 sendMailSSL = new SendMailSSL();
+		 sendMailSSL.sendMail("geia sou re mastora", "gmarios@ote.gr");
+	 }
 
 	 private JFrame frame;
 	 private JPanel mainPanel, filePanel;
@@ -69,4 +74,5 @@ public class SrReportGenerator {
 	 private JFileChooser fileChooser;
 	 private File fileToParse;
 	 private DataRetriever dataRetriever;
+	 private SendMailSSL sendMailSSL;
 }
