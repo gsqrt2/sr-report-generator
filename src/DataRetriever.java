@@ -10,12 +10,21 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
+import javax.swing.JProgressBar;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import com.sun.xml.internal.ws.api.Component;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
@@ -31,10 +40,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 public class DataRetriever {
 	public DataRetriever(JFrame parentFrame){
 		appFrame = parentFrame;
-		openDialog();
 		dataRetrieverDialog = new JDialog();
 		islandToTtlpHash = new HashMap<String,String>();
 		additionalLocationsHash = new HashMap<String,String>();
+		
 		readStructure();
 		readAdditinalLocations();
 		readTaskTypes();
@@ -43,49 +52,74 @@ public class DataRetriever {
 	private void openDialog()
 	{
 		dialogFrame = new JDialog(appFrame, true);
-		dialogFrame.setLocationRelativeTo(null);
+		dialogFrame.setLocation((appFrame.getLocation().x +350), (appFrame.getLocation().y + 200));
 		dialogFrame.setUndecorated(true);
 		JPanel dialogPanel = new JPanel();
-		dialogPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		dialogText = new JLabel("This is the dialog text");
-		dialogPanel.add(dialogText);
-		dialogFrame.add(dialogPanel);
+		Border margin = new EmptyBorder(10,10,10,10);
+		Border border = BorderFactory.createLineBorder(Color.BLACK);
+		dialogPanel.setBorder(new CompoundBorder(border, margin));
+	
+		parserProgressBar = new JProgressBar();
+		parserProgressBar.setPreferredSize(new Dimension(300,20));
+		parserProgressBar.setStringPainted(true);
 		
+		dialogPanel.add(parserProgressBar);
+		dialogFrame.add(dialogPanel);
 		dialogFrame.pack();
+	
+		parserThread = new Thread(new Runnable(){
+			public void run(){
+				readXlsxData();
+			}
+		});
+		parserThread.start();
 		dialogFrame.setVisible(true);
+		
+		System.out.println("before dispose");
+		
+		
 		
 	}
 	
 	public void retrieveData(File xlsxFile)
 	{
 		dataFile = xlsxFile;
-		readXlsxData();
+		openDialog();
+		
 	}
 	
 	private void readXlsxData()
 	{
 		try{
+			
+            parserProgressBar.setValue(0);
+			parserProgressBar.setString("Ανάγνωση αρχείου δεδομένων...");
 			FileInputStream fis = new FileInputStream(dataFile);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
             XSSFSheet sheet = book.getSheetAt(0);
             int currentRow = 1;
-            System.out.println("sheet size: "+sheet.getLastRowNum());
-            
+            int allRows = sheet.getLastRowNum()+1;
+            parserProgressBar.setMinimum(0);
+            parserProgressBar.setMaximum(allRows);
+            //System.out.println("sheet size: "+sheet.getLastRowNum());
             
             Iterator<Row> itr = sheet.iterator();
-            //System.out.println(sheet.getRow(0).getCell(0).toString());
-            //Iterating over Excel file in Java
+          
             while (itr.hasNext() && validXlsxFormat) {
             	Row row = itr.next();
 
                 if(headersRow)
                 {
+                	parserProgressBar.setValue(currentRow);
+                	parserProgressBar.setString("Έλεγχος κεφαλίδων...");
                 	checkXlsxHeaders(row);
                 	headersRow = false;
                 }
                 else
-                {                	
-                	/*ta mdf kai ta pedia metrane gia mia i gia dyo tasks?
+                {   
+                	parserProgressBar.setValue(currentRow);
+                	parserProgressBar.setString("Επεξεργασία εγγραφής "+currentRow+" από "+allRows);
+                	/*ta mdf kai ta pedia metrane gia mia i gia dyo tasks? 
                 	 * xreiazomai paradeigma apo alloy eidoys douleies opws syndyastika rantevou, ipvpn kai kalwdiakes an metrane*/
                 	
                 	/* CHECK LOCATION AND HANDLE IF UNRECOGNIZED*/
@@ -139,6 +173,7 @@ public class DataRetriever {
                 currentRow++;
             }
             book.close();
+            dialogFrame.dispose();
         }
 		catch(IOException ioe)
 		{
@@ -303,5 +338,7 @@ public class DataRetriever {
 	private NodeList ttlpList;
 	private HashMap islandToTtlpHash, additionalLocationsHash, taskTypesHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
+	private JProgressBar parserProgressBar;
+	private Thread parserThread;
 
 }

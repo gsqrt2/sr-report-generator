@@ -1,11 +1,13 @@
 import javax.swing.*;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import  java.awt.Dimension;
 
 import org.w3c.dom.Document;
 
@@ -43,9 +45,13 @@ public class SrReportGenerator {
 					  fileToParse = fileChooser.getSelectedFile();
 					  
 					  if(dataRetriever == null)
+					  {
 						  dataRetriever = new DataRetriever(frame);
+					  }
 					  
+					  statusLabel.setText("Ανάγνωση αρχείου δεδομένων...");
 					  dataRetriever.retrieveData(fileToParse);
+					  statusLabel.setText("Status");
 					  
 				  }
 			  } 
@@ -53,16 +59,40 @@ public class SrReportGenerator {
 		filePanel.add(filePathTextField);
 		filePanel.add(chooseFileButton);
 		
+		/*init resultPanel*/
+		resultPanel = new JPanel();
+		resultPanel.setPreferredSize(new Dimension(1000, 500));
+		JLabel dummyResultLabel = new JLabel("result table here");
+		resultPanel.add(dummyResultLabel);
+		resultPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		
+		
+		/*init statusPanel*/
+		statusPanel = new JPanel();
+		statusPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		statusLabel = new JLabel("Status");
+		statusPanel.add(statusLabel);
+		
 		/*Assemble main panel*/
 		mainPanel.add(filePanel,  BorderLayout.PAGE_START);
+		mainPanel.add(resultPanel, BorderLayout.CENTER);
+		mainPanel.add(statusPanel, BorderLayout.PAGE_END);
 		
 		
 		/*Show GUI*/
-		frame.getContentPane().add(mainPanel);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setLocation(250, 100);
-		frame.setVisible(true);	
+		try{
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			frame.getContentPane().add(mainPanel);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.pack();
+			frame.setLocation(150, 100);
+			frame.setVisible(true);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Exception trying to show GUI: "+e);
+		}
+		
 	}
 	 
 	 private void sendReport()
@@ -75,19 +105,18 @@ public class SrReportGenerator {
 		 if(sendMailSSL == null)
 		 {	 
 			 sendMailSSL = new SendMailSSL();
-			 System.out.println("created mailer instance");
 		 }
 
 		 sendMailSSL.sendMail(htmlText, "gsqrt2@gmail.com");
-
 	 }
 
 	 private JFrame frame;
-	 private JPanel mainPanel, filePanel;
+	 private JPanel mainPanel, filePanel, resultPanel, statusPanel;
 	 private JButton chooseFileButton;
 	 private JTextField filePathTextField;
 	 private JFileChooser fileChooser;
 	 private File fileToParse;
 	 private DataRetriever dataRetriever;
 	 private SendMailSSL sendMailSSL;
+	 private JLabel statusLabel;
 }
