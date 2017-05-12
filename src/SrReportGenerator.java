@@ -1,13 +1,20 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.*;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.io.File;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import  java.awt.Dimension;
+import java.awt.Dimension;
 
 import org.w3c.dom.Document;
 
@@ -20,7 +27,7 @@ public class SrReportGenerator {
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-			new SrReportGenerator();
+		srReportGenerator = new SrReportGenerator();
 	}
 	
 	 private void frameInit(){
@@ -46,14 +53,15 @@ public class SrReportGenerator {
 					  
 					  if(dataRetriever == null)
 					  {
-						  dataRetriever = new DataRetriever(frame);
+						  dataRetriever = new DataRetriever(srReportGenerator);
 					  }
+
 					  
-					  statusLabel.setText("Ανάγνωση αρχείου δεδομένων...");
 					  dataRetriever.retrieveData(fileToParse);
-					  statusLabel.setText("Status");
 					  
 				  }
+				 // loadParserProgress();
+				 // update2();
 			  } 
 			} );
 		filePanel.add(filePathTextField);
@@ -62,8 +70,6 @@ public class SrReportGenerator {
 		/*init resultPanel*/
 		resultPanel = new JPanel();
 		resultPanel.setPreferredSize(new Dimension(1000, 500));
-		JLabel dummyResultLabel = new JLabel("result table here");
-		resultPanel.add(dummyResultLabel);
 		resultPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		
 		
@@ -109,9 +115,78 @@ public class SrReportGenerator {
 
 		 sendMailSSL.sendMail(htmlText, "gsqrt2@gmail.com");
 	 }
+	 
+	 public void loadParserProgress()
+	 {
 
+		 progressPanel = new JPanel();
+		 
+		 resultPanel.setLayout(new GridBagLayout());
+		 GridBagConstraints gbc = new GridBagConstraints();
+		 gbc.anchor = GridBagConstraints.CENTER;
+		 
+		 Border margin = new EmptyBorder(10,10,10,10);
+		 Border border = BorderFactory.createLineBorder(Color.BLACK);
+		 progressPanel.setBorder(new CompoundBorder(border, margin));
+		
+		 parserProgressBar = new JProgressBar();
+		 parserProgressBar.setPreferredSize(new Dimension(200, 20));
+		 parserProgressBar.setStringPainted(true);
+		 parserProgressBar.setIndeterminate(true);
+		 progressPanel.add(parserProgressBar);
+		 resultPanel.add(progressPanel);
+		 resultPanel.revalidate();
+	 }
+	 
+	 public void setProgressBarIndeterminate(Boolean indeterminate)
+	 {
+		 parserProgressBar.setIndeterminate(indeterminate);
+	 }
+	 
+	 public void disableActions(Boolean disabled)
+	 {
+		 chooseFileButton.setEnabled(!disabled); 
+	 }
+	 
+	 
+	 public void setProgressBarString(String newString)
+	 {
+		parserProgressBar.setString(newString); 
+	 }
+	 
+	 public void setProgressBarValue(int newValue)
+	 {
+		 parserProgressBar.setValue(newValue);
+	 }
+	 
+	 public void setProgressBarMinimumValue(int newValue)
+	 {
+		 parserProgressBar.setMinimum(newValue);
+	 }
+	 
+	 public void setProgressBarMaximumValue(int newValue)
+	 {
+		 parserProgressBar.setMaximum(newValue);
+	 }
+	 
+	 public void setStatus(String newStatus)
+	 {
+		 statusLabel.setText(newStatus);
+	 }
+	 
+	 public void showReport()
+	 {
+		 resultPanel.remove(progressPanel);
+		 parserProgressBar = null;
+		 progressPanel = null;
+		 JLabel resultlabel = new JLabel("result here");
+		 resultPanel.updateUI();
+		 System.out.println("showing report and all");
+	 }
+
+	 
 	 private JFrame frame;
-	 private JPanel mainPanel, filePanel, resultPanel, statusPanel;
+	 private JPanel mainPanel, filePanel, resultPanel, statusPanel, progressPanel;
 	 private JButton chooseFileButton;
 	 private JTextField filePathTextField;
 	 private JFileChooser fileChooser;
@@ -119,4 +194,6 @@ public class SrReportGenerator {
 	 private DataRetriever dataRetriever;
 	 private SendMailSSL sendMailSSL;
 	 private JLabel statusLabel;
+	 private JProgressBar parserProgressBar;
+	 public static SrReportGenerator srReportGenerator;
 }

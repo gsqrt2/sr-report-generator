@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 import javax.swing.JProgressBar;
@@ -17,6 +18,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.Container;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -38,87 +40,72 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 
 public class DataRetriever {
-	public DataRetriever(JFrame parentFrame){
-		appFrame = parentFrame;
-		dataRetrieverDialog = new JDialog();
+	public DataRetriever(SrReportGenerator object){
+		parentObject = object;
 		islandToTtlpHash = new HashMap<String,String>();
 		additionalLocationsHash = new HashMap<String,String>();
 		
+		parentObject.setStatus("Εισαγωγή βασικών δομών...");
 		readStructure();
 		readAdditinalLocations();
 		readTaskTypes();
+		parentObject.setStatus("Status");
 	}
 	
-	private void openDialog()
-	{
-		dialogFrame = new JDialog(appFrame, true);
-		dialogFrame.setLocation((appFrame.getLocation().x +350), (appFrame.getLocation().y + 200));
-		dialogFrame.setUndecorated(true);
-		JPanel dialogPanel = new JPanel();
-		Border margin = new EmptyBorder(10,10,10,10);
-		Border border = BorderFactory.createLineBorder(Color.BLACK);
-		dialogPanel.setBorder(new CompoundBorder(border, margin));
-	
-		parserProgressBar = new JProgressBar();
-		parserProgressBar.setPreferredSize(new Dimension(300,20));
-		parserProgressBar.setStringPainted(true);
-		
-		dialogPanel.add(parserProgressBar);
-		dialogFrame.add(dialogPanel);
-		dialogFrame.pack();
-	
-		parserThread = new Thread(new Runnable(){
-			public void run(){
-				readXlsxData();
-			}
-		});
-		parserThread.start();
-		dialogFrame.setVisible(true);
-		
-		System.out.println("before dispose");
-		
-		
-		
-	}
+
 	
 	public void retrieveData(File xlsxFile)
 	{
 		dataFile = xlsxFile;
-		openDialog();
+
+		Thread thread = new Thread(new Runnable(){
+			 public void run()
+			 {
+				 parentObject.disableActions(true);
+				 parentObject.loadParserProgress();
+				 readXlsxData();
+				 parentObject.disableActions(false);
+				 parentObject.setStatus("Status");
+				 parentObject.showReport();
+			 }
+		 });
+		 
+		 thread.start();
 		
 	}
 	
 	private void readXlsxData()
 	{
 		try{
+			parentObject.setProgressBarValue(0);
+			parentObject.setProgressBarString("Καταμέτρηση...");
 			
-            parserProgressBar.setValue(0);
-			parserProgressBar.setString("Ανάγνωση αρχείου δεδομένων...");
 			FileInputStream fis = new FileInputStream(dataFile);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
             XSSFSheet sheet = book.getSheetAt(0);
             int currentRow = 1;
             int allRows = sheet.getLastRowNum()+1;
-            parserProgressBar.setMinimum(0);
-            parserProgressBar.setMaximum(allRows);
+            parentObject.setProgressBarIndeterminate(false);
+            parentObject.setProgressBarMinimumValue(0);
+            parentObject.setProgressBarMaximumValue(allRows);
             //System.out.println("sheet size: "+sheet.getLastRowNum());
             
             Iterator<Row> itr = sheet.iterator();
           
             while (itr.hasNext() && validXlsxFormat) {
             	Row row = itr.next();
-
+            	Thread.sleep(5);
                 if(headersRow)
                 {
-                	parserProgressBar.setValue(currentRow);
-                	parserProgressBar.setString("Έλεγχος κεφαλίδων...");
+                	parentObject.setProgressBarValue(currentRow);
+                	parentObject.setProgressBarString("Έλεγχος κεφαλίδων...");
                 	checkXlsxHeaders(row);
                 	headersRow = false;
                 }
                 else
                 {   
-                	parserProgressBar.setValue(currentRow);
-                	parserProgressBar.setString("Επεξεργασία εγγραφής "+currentRow+" από "+allRows);
+                	parentObject.setProgressBarValue(currentRow);
+                	parentObject.setProgressBarString("Εγγραφή "+currentRow+" από "+allRows);
                 	/*ta mdf kai ta pedia metrane gia mia i gia dyo tasks? 
                 	 * xreiazomai paradeigma apo alloy eidoys douleies opws syndyastika rantevou, ipvpn kai kalwdiakes an metrane*/
                 	
@@ -173,11 +160,20 @@ public class DataRetriever {
                 currentRow++;
             }
             book.close();
-            dialogFrame.dispose();
+            
+            if(!validXlsxFormat)
+            {
+            	System.out.println("lathos arxeio");
+            }
+
         }
 		catch(IOException ioe)
 		{
 			System.out.println("IOException trying to create fis from xlsx file.");
+		}
+		catch(InterruptedException e)
+		{
+			System.out.println("inerrupted exception");
 		}
 	}
 	
@@ -329,16 +325,16 @@ public class DataRetriever {
 	   return node;
 	 }
 	
-	private JLabel dialogText;
-	private JDialog dialogFrame;
-	private JFrame appFrame;
-	private JDialog dataRetrieverDialog;
+
+
+	private SrReportGenerator parentObject;
+
 	private File dataFile, structureXmlFile;
 	private boolean headersRow = true, validXlsxFormat = true;
 	private NodeList ttlpList;
 	private HashMap islandToTtlpHash, additionalLocationsHash, taskTypesHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
-	private JProgressBar parserProgressBar;
-	private Thread parserThread;
+
+
 
 }
