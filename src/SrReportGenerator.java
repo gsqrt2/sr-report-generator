@@ -58,10 +58,7 @@ public class SrReportGenerator {
 
 					  
 					  dataRetriever.retrieveData(fileToParse);
-					  
 				  }
-				 // loadParserProgress();
-				 // update2();
 			  } 
 			} );
 		filePanel.add(filePathTextField);

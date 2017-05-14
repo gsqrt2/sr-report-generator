@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <additional>
 	<location name="ΤΡΟΙΖΗΝΑ" parent="ΠΟΡΟΣ - ΜΕΘΑΝΑ"/>
+	<location name="ΛΑΘΟΣ ΕΓΓΡΑΦΗ" parent="ignore"/>
 </additional>

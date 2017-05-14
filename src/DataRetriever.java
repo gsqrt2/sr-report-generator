@@ -79,7 +79,7 @@ public class DataRetriever {
 		try{
 			parentObject.setProgressBarValue(0);
 			parentObject.setProgressBarString("Καταμέτρηση...");
-			
+			headersRow = true;
 			FileInputStream fis = new FileInputStream(dataFile);
 			XSSFWorkbook book = new XSSFWorkbook(fis);
             XSSFSheet sheet = book.getSheetAt(0);
@@ -92,31 +92,35 @@ public class DataRetriever {
             
             Iterator<Row> itr = sheet.iterator();
           
-            while (itr.hasNext() && validXlsxFormat) {
+            do {
             	Row row = itr.next();
             	Thread.sleep(5);
                 if(headersRow)
                 {
                 	parentObject.setProgressBarValue(currentRow);
                 	parentObject.setProgressBarString("Έλεγχος κεφαλίδων...");
+                	//System.out.println("checking headers");
                 	checkXlsxHeaders(row);
+                	//System.out.println("checked headers: "+validXlsxFormat);
                 	headersRow = false;
                 }
                 else
                 {   
+                	ignoreRecord = false;
                 	parentObject.setProgressBarValue(currentRow);
                 	parentObject.setProgressBarString("Εγγραφή "+currentRow+" από "+allRows);
                 	/*ta mdf kai ta pedia metrane gia mia i gia dyo tasks? 
                 	 * xreiazomai paradeigma apo alloy eidoys douleies opws syndyastika rantevou, ipvpn kai kalwdiakes an metrane*/
                 	
                 	/* CHECK LOCATION AND HANDLE IF UNRECOGNIZED*/
-                	
+
                 	String currentIsland = (String) row.getCell(islandCol).toString();
+                	String currentTtlp = "";
                 	
                 	
                 	if(islandToTtlpHash.get(currentIsland) != null)
                 	{
-                		
+                		currentTtlp =  islandToTtlpHash.get(currentIsland);
                 	}
                 	else
                 	{
@@ -124,46 +128,59 @@ public class DataRetriever {
                 		if(additionalLocationsHash.get(currentIsland) != null)
                 		{
                 			System.out.println(currentIsland+" found in "+additionalLocationsHash.get(currentIsland));
+                			if(additionalLocationsHash.get(currentIsland) != "ignore")
+                			{
+                				currentTtlp = additionalLocationsHash.get(currentIsland);
+                			}
+                			else
+                			{
+                				ignoreRecord = true;
+                			}
                 		}
                 		else
                 		{
                 			System.out.println("handle uknown location");
+                			
                 		}
                 		
                 	}
                 	
                 			
-                	/* CHECK TASK TYPE AND HANDLE IF UNRECOGNIZED*/		
-                	String currentTaskTypeDescription = (String) row.getCell(taskTypeCol).toString();
-                	String currentTaskType = (String) taskTypesHash.get(currentTaskTypeDescription);
-                	
-                	if(currentTaskType.equals("connection"))
+                	/* CHECK TASK TYPE AND HANDLE IF UNRECOGNIZED*/
+                	if(!ignoreRecord)
                 	{
-                		//System.out.println("new connection");
+	                	String currentTaskTypeDescription = (String) row.getCell(taskTypeCol).toString();
+	                	String currentTaskType = (String) taskTypesHash.get(currentTaskTypeDescription);
+	                	
+	                	if(currentTaskType.equals("connection"))
+	                	{
+	                		//System.out.println("new connection");
+	                	}
+	                	else
+	                	if(currentTaskType.equals("service"))
+	                	{
+	                		//System.out.println("new service");
+	                	}
+	                	else
+	                	if(currentTaskType.equals("ignore"))
+	                	{
+	                		//System.out.println("IGNORED!!!!");
+	                	}
+	                	else
+	                	{
+	                		System.out.println("Unrecognized task type: '"+currentTaskType+"', at row "+currentRow);
+	                	}
                 	}
-                	else
-                	if(currentTaskType.equals("service"))
-                	{
-                		//System.out.println("new service");
-                	}
-                	else
-                	if(currentTaskType.equals("ignore"))
-                	{
-                		//System.out.println("IGNORED!!!!");
-                	}
-                	else
-                	{
-                		System.out.println("Unrecognized task type: '"+currentTaskType+"', at row "+currentRow);
-                	}			
                 }
                 
                 currentRow++;
-            }
+            }while (itr.hasNext() && validXlsxFormat);
             book.close();
             
             if(!validXlsxFormat)
             {
-            	System.out.println("lathos arxeio");
+            	JOptionPane.showMessageDialog(null, "Η δομή του αρχείου δεν είναι η αναμένόμενη, παρακαλώ επιλέξτε κατάλληλο αρχείο.");
+            	validXlsxFormat = true;
             }
 
         }
@@ -265,6 +282,10 @@ public class DataRetriever {
 	
 	private void checkXlsxHeaders(Row headersRow)
 	{
+		islandCol = null;
+		appointmentDateCol = null;
+		taskTypeCol = null;
+		statusCol = null;
 		Iterator<Cell> cellIterator = headersRow.cellIterator();
 		int cellNo = 0;
 		while(cellIterator.hasNext()) {
@@ -330,9 +351,9 @@ public class DataRetriever {
 	private SrReportGenerator parentObject;
 
 	private File dataFile, structureXmlFile;
-	private boolean headersRow = true, validXlsxFormat = true;
+	private boolean headersRow = true, validXlsxFormat = true, ignoreRecord = false;
 	private NodeList ttlpList;
-	private HashMap islandToTtlpHash, additionalLocationsHash, taskTypesHash;
+	private HashMap<String,String> islandToTtlpHash, additionalLocationsHash, taskTypesHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
 
 
