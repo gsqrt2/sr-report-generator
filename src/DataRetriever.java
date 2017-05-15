@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -42,10 +43,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 public class DataRetriever {
 	public DataRetriever(SrReportGenerator object){
 		parentObject = object;
-		islandToTtlpHash = new HashMap<String,String>();
+		islandToTtlpHash = new HashMap<String,Ttlp>();
 		additionalLocationsHash = new HashMap<String,String>();
-		
+		ttlpArraylist = new ArrayList<Ttlp>();
 		parentObject.setStatus("Εισαγωγή βασικών δομών...");
+		
 		readStructure();
 		readAdditinalLocations();
 		readTaskTypes();
@@ -66,6 +68,7 @@ public class DataRetriever {
 				 readXlsxData();
 				 parentObject.disableActions(false);
 				 parentObject.setStatus("Status");
+				 parentObject.handInRetrievedArraylist(ttlpArraylist);
 				 parentObject.showReport();
 			 }
 		 });
@@ -115,12 +118,15 @@ public class DataRetriever {
                 	/* CHECK LOCATION AND HANDLE IF UNRECOGNIZED*/
 
                 	String currentIsland = (String) row.getCell(islandCol).toString();
-                	String currentTtlp = "";
+                	Ttlp currentTtlp = null;
+                	String currentTy = "";
                 	
                 	
                 	if(islandToTtlpHash.get(currentIsland) != null)
                 	{
                 		currentTtlp =  islandToTtlpHash.get(currentIsland);
+                		currentTy = currentIsland;
+                		System.out.println("found ttlp from object:"+currentTtlp+", ty: "+currentIsland);
                 	}
                 	else
                 	{
@@ -128,9 +134,21 @@ public class DataRetriever {
                 		if(additionalLocationsHash.get(currentIsland) != null)
                 		{
                 			System.out.println(currentIsland+" found in "+additionalLocationsHash.get(currentIsland));
+                			String currentTyFromAdditional = additionalLocationsHash.get(currentIsland);
                 			if(additionalLocationsHash.get(currentIsland) != "ignore")
                 			{
-                				currentTtlp = additionalLocationsHash.get(currentIsland);
+                				if(islandToTtlpHash.get(currentTyFromAdditional) != null)
+                				{
+                					currentTtlp = islandToTtlpHash.get(currentTyFromAdditional);
+                					currentTy = currentTyFromAdditional;
+                					System.out.println("found ttlp from ADDITIONAL object:"+currentTtlp+", ty: "+currentTyFromAdditional);
+                				}
+                				else
+                				{
+                					/*to parent apo to additional location entry de vrethike sto main structure*/
+                					ignoreRecord = true;
+                					System.out.println("Η περιοχή '"+currentTyFromAdditional+"' δεν ανήκει στη βασική δομή.");
+                				}
                 			}
                 			else
                 			{
@@ -192,6 +210,7 @@ public class DataRetriever {
 		{
 			System.out.println("inerrupted exception");
 		}
+		
 	}
 	
 	private void readStructure()
@@ -205,13 +224,16 @@ public class DataRetriever {
 	        	 Element currentTtlpElement = (Element) ttlps.item(i);
 	        	 //System.out.println(currentTtlpElement.getAttribute("name"));
 	        	 String ttlpName = currentTtlpElement.getAttribute("name");
+	        	 Ttlp currentTtlp = new Ttlp(ttlpName);
+	        	 ttlpArraylist.add(currentTtlp);
 	        	 NodeList tys = currentTtlpElement.getChildNodes();
 	        	 for(int j=0;j<tys.getLength();j++)
 	        	 {
 	        		 Node currentTyElement = tys.item(j);
 	        		 //System.out.println("-> "+currentTyElement.getFirstChild().getTextContent());
 	        		 String islandName = currentTyElement.getFirstChild().getTextContent();
-	        		 islandToTtlpHash.put(islandName, ttlpName);
+	        		 currentTtlp.addTy(islandName);
+	        		 islandToTtlpHash.put(islandName, currentTtlp);
 	        	 }
 	        	 
 	         }
@@ -353,8 +375,10 @@ public class DataRetriever {
 	private File dataFile, structureXmlFile;
 	private boolean headersRow = true, validXlsxFormat = true, ignoreRecord = false;
 	private NodeList ttlpList;
-	private HashMap<String,String> islandToTtlpHash, additionalLocationsHash, taskTypesHash;
+	private HashMap<String,String> additionalLocationsHash, taskTypesHash;
+	private HashMap<String,Ttlp> islandToTtlpHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
+	private ArrayList<Ttlp> ttlpArraylist;
 
 
 

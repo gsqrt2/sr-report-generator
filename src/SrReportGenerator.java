@@ -16,6 +16,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.Dimension;
 
+import java.util.ArrayList;
+
 import org.w3c.dom.Document;
 
 import org.w3c.dom.Element;
@@ -177,8 +179,15 @@ public class SrReportGenerator {
 		 parserProgressBar = null;
 		 progressPanel = null;
 		 JLabel resultlabel = new JLabel("result here");
+		 resultPanel.add(resultlabel);
 		 resultPanel.updateUI();
-		 System.out.println("showing report and all");
+		 System.out.println("num of ttlps: "+ retrievedArraylist.size());
+	 }
+	 
+	 public void handInRetrievedArraylist(ArrayList resultArraylist)
+	 {
+		 retrievedArraylist = new ArrayList<Ttlp>();
+		 retrievedArraylist = resultArraylist;
 	 }
 
 	 
@@ -192,5 +201,6 @@ public class SrReportGenerator {
 	 private SendMailSSL sendMailSSL;
 	 private JLabel statusLabel;
 	 private JProgressBar parserProgressBar;
+	 private ArrayList retrievedArraylist = null;
 	 public static SrReportGenerator srReportGenerator;
 }

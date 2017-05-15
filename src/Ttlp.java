@@ -8,6 +8,12 @@ public class Ttlp {
 		
 	}
 	
+	public String toString()
+	{
+		return ttlpName;
+	}
+	
+	
 	public islandTy addTy(String tyName)
 	{
 		islandTy newTy = new islandTy(tyName, this);
