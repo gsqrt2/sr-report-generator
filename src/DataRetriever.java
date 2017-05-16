@@ -157,13 +157,15 @@ public class DataRetriever {
                 		}
                 		else
                 		{
-                			System.out.println("handle uknown location");
-                			
+                			System.out.println("handle uknown location: "+currentIsland);
+                			ignoreRecord = true;
+                			/*NA TO VGALW OTAN FTIAKSW TO HANDLE*/
                 		}
                 		
                 	}
+                		//if(!ignoreRecord)
+                			//System.out.println("checking task type for ttlp: "+currentTtlp.toString()+", ty: "+currentTy);
                 	
-                			
                 	/* CHECK TASK TYPE AND HANDLE IF UNRECOGNIZED*/
                 	if(!ignoreRecord)
                 	{
@@ -173,11 +175,16 @@ public class DataRetriever {
 	                	if(currentTaskType.equals("connection"))
 	                	{
 	                		//System.out.println("new connection");
+	                		//System.out.println("requesting ty object for :"+currentTy);
+	                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
+	                		currentIslandTyObject.increaseConnections();
 	                	}
 	                	else
 	                	if(currentTaskType.equals("service"))
 	                	{
 	                		//System.out.println("new service");
+	                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
+	                		currentIslandTyObject.increaseServices();
 	                	}
 	                	else
 	                	if(currentTaskType.equals("ignore"))
@@ -268,7 +275,7 @@ public class DataRetriever {
 	         for(int i=0;i<locations.getLength();i++)
 	         {
 	        	 Element currentElement = (Element) locations.item(i);
-	        	 System.out.println(currentElement.getAttribute("name")+" -> "+currentElement.getAttribute("parent"));
+	        	 //System.out.println(currentElement.getAttribute("name")+" -> "+currentElement.getAttribute("parent"));
 	        	 additionalLocationsHash.put(currentElement.getAttribute("name"), currentElement.getAttribute("parent"));
 	         }
 			

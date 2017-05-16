@@ -178,13 +178,27 @@ public class SrReportGenerator {
 		 resultPanel.remove(progressPanel);
 		 parserProgressBar = null;
 		 progressPanel = null;
+		 
+		
+		 for(int i=0;i<retrievedArraylist.size();i++)
+		 {
+			// System.out.println("ttlp no"+i+": "+retrievedArraylist.get(i));
+			 Ttlp currentTtlp = retrievedArraylist.get(i);
+			 ArrayList<Ttlp.IslandTy> tysOfTtlpArraylist = currentTtlp.getListOfTys();
+			// System.out.println(tysOfTtlpArraylist.size());
+			 for(int j=0;j<tysOfTtlpArraylist.size();j++)
+			 {
+				 Ttlp.IslandTy currentTy = tysOfTtlpArraylist.get(j);
+				 System.out.println("Ty "+currentTy.toString()+": kataskeyes:"+currentTy.getNumOfConnections()+", vlaves"+currentTy.getNumOfServices());
+			 }
+		 }
+		 
 		 JLabel resultlabel = new JLabel("result here");
 		 resultPanel.add(resultlabel);
 		 resultPanel.updateUI();
-		 System.out.println("num of ttlps: "+ retrievedArraylist.size());
 	 }
 	 
-	 public void handInRetrievedArraylist(ArrayList resultArraylist)
+	 public void handInRetrievedArraylist(ArrayList<Ttlp> resultArraylist)
 	 {
 		 retrievedArraylist = new ArrayList<Ttlp>();
 		 retrievedArraylist = resultArraylist;
@@ -201,6 +215,6 @@ public class SrReportGenerator {
 	 private SendMailSSL sendMailSSL;
 	 private JLabel statusLabel;
 	 private JProgressBar parserProgressBar;
-	 private ArrayList retrievedArraylist = null;
+	 private ArrayList<Ttlp> retrievedArraylist = null;
 	 public static SrReportGenerator srReportGenerator;
 }
