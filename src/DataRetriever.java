@@ -2,40 +2,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.BorderFactory;
-import javax.swing.JProgressBar;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.BorderLayout;
-import java.awt.Container;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-
-import com.sun.xml.internal.ws.api.Component;
-
+//import com.sun.xml.internal.ws.api.Component;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-
 import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+//import org.apache.poi.ss.usermodel.Sheet;
+//import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
@@ -126,14 +106,14 @@ public class DataRetriever {
                 	{
                 		currentTtlp =  islandToTtlpHash.get(currentIsland);
                 		currentTy = currentIsland;
-                		System.out.println("found ttlp from object:"+currentTtlp+", ty: "+currentIsland);
+                		//System.out.println("found ttlp from object:"+currentTtlp+", ty: "+currentIsland);
                 	}
                 	else
                 	{
                 		//System.out.println("not a known location: "+currentIsland);
                 		if(additionalLocationsHash.get(currentIsland) != null)
                 		{
-                			System.out.println(currentIsland+" found in "+additionalLocationsHash.get(currentIsland));
+                			//System.out.println(currentIsland+" found in "+additionalLocationsHash.get(currentIsland));
                 			String currentTyFromAdditional = additionalLocationsHash.get(currentIsland);
                 			if(additionalLocationsHash.get(currentIsland) != "ignore")
                 			{
@@ -141,7 +121,7 @@ public class DataRetriever {
                 				{
                 					currentTtlp = islandToTtlpHash.get(currentTyFromAdditional);
                 					currentTy = currentTyFromAdditional;
-                					System.out.println("found ttlp from ADDITIONAL object:"+currentTtlp+", ty: "+currentTyFromAdditional);
+                					//System.out.println("found ttlp from ADDITIONAL object:"+currentTtlp+", ty: "+currentTyFromAdditional);
                 				}
                 				else
                 				{
@@ -157,7 +137,8 @@ public class DataRetriever {
                 		}
                 		else
                 		{
-                			System.out.println("handle uknown location: "+currentIsland);
+                			//System.out.println("handle uknown location: "+currentIsland);
+                			new UnknownDataDialog(currentIsland, "location", this);
                 			ignoreRecord = true;
                 			/*NA TO VGALW OTAN FTIAKSW TO HANDLE*/
                 		}
@@ -178,6 +159,8 @@ public class DataRetriever {
 	                		//System.out.println("requesting ty object for :"+currentTy);
 	                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
 	                		currentIslandTyObject.increaseConnections();
+	                		if(currentTy == "пояос - лехама")
+	                			System.out.println("poros methana at :"+currentRow);
 	                	}
 	                	else
 	                	if(currentTaskType.equals("service"))
@@ -185,6 +168,8 @@ public class DataRetriever {
 	                		//System.out.println("new service");
 	                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
 	                		currentIslandTyObject.increaseServices();
+	                		//if(currentTy.toString().equals("пояос - лехама"))
+	                			//System.out.println("poros - methana service at :"+currentRow);
 	                	}
 	                	else
 	                	if(currentTaskType.equals("ignore"))
@@ -194,6 +179,7 @@ public class DataRetriever {
 	                	else
 	                	{
 	                		System.out.println("Unrecognized task type: '"+currentTaskType+"', at row "+currentRow);
+	                		new UnknownDataDialog(currentTaskType, "taskType", this);
 	                	}
                 	}
                 }
@@ -379,9 +365,8 @@ public class DataRetriever {
 
 	private SrReportGenerator parentObject;
 
-	private File dataFile, structureXmlFile;
+	private File dataFile;
 	private boolean headersRow = true, validXlsxFormat = true, ignoreRecord = false;
-	private NodeList ttlpList;
 	private HashMap<String,String> additionalLocationsHash, taskTypesHash;
 	private HashMap<String,Ttlp> islandToTtlpHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;

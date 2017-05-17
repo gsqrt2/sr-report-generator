@@ -189,6 +189,7 @@ public class SrReportGenerator {
 			 for(int j=0;j<tysOfTtlpArraylist.size();j++)
 			 {
 				 Ttlp.IslandTy currentTy = tysOfTtlpArraylist.get(j);
+				if(currentTtlp.toString().equals("аяцосаяымийоу"))
 				 System.out.println("Ty "+currentTy.toString()+": kataskeyes:"+currentTy.getNumOfConnections()+", vlaves"+currentTy.getNumOfServices());
 			 }
 		 }
