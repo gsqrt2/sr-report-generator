@@ -1,5 +1,5 @@
 import javax.swing.*;
-import java.awt.BorderLayout;
+import javax.swing.BoxLayout;
 import java.awt.Dimension;
 
 
@@ -27,11 +27,20 @@ public class UnknownDataDialog extends JDialog{
 	private void initGui()
 	{
 		this.setResizable(false);
-		mainPanel = new JPanel(new BorderLayout());
-		testLabel = new JLabel("dialog to handle "+dataString+" as "+dataType);
-		mainPanel.add(testLabel);
+		mainPanel = new JPanel();
+		
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		
+		testLabel1 = new JLabel("proti grammi");
+		testLabel2 = new JLabel("deyteri grammi");
+		testLabel3 = new JLabel("triti grammi");
+		okButton = new JButton("Ok");
+		mainPanel.add(testLabel1);
+		mainPanel.add(testLabel2);
+		mainPanel.add(testLabel3);
+		mainPanel.add(okButton);
 		this.add(mainPanel);
-		mainPanel.setPreferredSize(new Dimension(550,250));
+		//mainPanel.setPreferredSize(new Dimension(550,250));
 		
 		pack();
 		setLocationRelativeTo(null);
@@ -45,7 +54,8 @@ public class UnknownDataDialog extends JDialog{
 	}
 	
 	private String dataString, dataType;
-	private JPanel mainPanel;
-	private JLabel testLabel;
+	private JPanel mainPanel, addLocationPanel, ignoreAlwaysPanel, ignoreOncePanel;
+	private JLabel testLabel1, testLabel2, testLabel3;
+	private JButton okButton;
 	private DataRetriever parentDataRetriever;
 }
