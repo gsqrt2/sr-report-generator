@@ -25,6 +25,7 @@ public class DataRetriever {
 		parentObject = object;
 		islandToTtlpHash = new HashMap<String,Ttlp>();
 		additionalLocationsHash = new HashMap<String,String>();
+		ttlpHash = new HashMap<String,Ttlp>();
 		ttlpArraylist = new ArrayList<Ttlp>();
 		parentObject.setStatus("Εισαγωγή βασικών δομών...");
 		
@@ -217,8 +218,10 @@ public class DataRetriever {
 	        	 Element currentTtlpElement = (Element) ttlps.item(i);
 	        	 //System.out.println(currentTtlpElement.getAttribute("name"));
 	        	 String ttlpName = currentTtlpElement.getAttribute("name");
+	        	
 	        	 Ttlp currentTtlp = new Ttlp(ttlpName);
 	        	 ttlpArraylist.add(currentTtlp);
+	        	 ttlpHash.put(ttlpName, currentTtlp);
 	        	 NodeList tys = currentTtlpElement.getChildNodes();
 	        	 for(int j=0;j<tys.getLength();j++)
 	        	 {
@@ -362,6 +365,17 @@ public class DataRetriever {
 	 }
 	
 
+	public Ttlp[] getTtplStructure(){
+
+		Ttlp[] ttlpArray = new Ttlp[ttlpArraylist.size()];
+		ttlpArraylist.toArray(ttlpArray);
+		
+		return ttlpArray;
+	}
+	
+
+	
+
 
 	private SrReportGenerator parentObject;
 
@@ -371,6 +385,7 @@ public class DataRetriever {
 	private HashMap<String,Ttlp> islandToTtlpHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
 	private ArrayList<Ttlp> ttlpArraylist;
+	private HashMap<String, Ttlp> ttlpHash;
 
 
 
