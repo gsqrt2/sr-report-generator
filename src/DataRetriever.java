@@ -139,7 +139,7 @@ public class DataRetriever {
                 		else
                 		{
                 			//System.out.println("handle uknown location: "+currentIsland);
-                			new UnknownDataDialog(currentIsland, "location", this);
+                			//new UnknownDataDialog(currentIsland, "location", this);
                 			ignoreRecord = true;
                 			/*NA TO VGALW OTAN FTIAKSW TO HANDLE*/
                 		}
@@ -180,7 +180,7 @@ public class DataRetriever {
 	                	else
 	                	{
 	                		System.out.println("Unrecognized task type: '"+currentTaskType+"', at row "+currentRow);
-	                		new UnknownDataDialog(currentTaskType, "taskType", this);
+	                		//new UnknownDataDialog(currentTaskType, "taskType", this);
 	                	}
                 	}
                 }

@@ -179,23 +179,13 @@ public class SrReportGenerator {
 		 parserProgressBar = null;
 		 progressPanel = null;
 		 
-		
-		 for(int i=0;i<retrievedArraylist.size();i++)
-		 {
-			// System.out.println("ttlp no"+i+": "+retrievedArraylist.get(i));
-			 Ttlp currentTtlp = retrievedArraylist.get(i);
-			 ArrayList<Ttlp.IslandTy> tysOfTtlpArraylist = currentTtlp.getListOfTys();
-			// System.out.println(tysOfTtlpArraylist.size());
-			 for(int j=0;j<tysOfTtlpArraylist.size();j++)
-			 {
-				 Ttlp.IslandTy currentTy = tysOfTtlpArraylist.get(j);
-				if(currentTtlp.toString().equals("аяцосаяымийоу"))
-				 System.out.println("Ty "+currentTy.toString()+": kataskeyes:"+currentTy.getNumOfConnections()+", vlaves"+currentTy.getNumOfServices());
-			 }
-		 }
-		 
-		 JLabel resultlabel = new JLabel("result here");
-		 resultPanel.add(resultlabel);
+		 ReportGenerator reportGenerator = new ReportGenerator(retrievedArraylist);
+		 JTable resultsTable = reportGenerator.getResults();
+		 JScrollPane resultScrollPane = new JScrollPane();
+		 resultScrollPane.add(resultsTable);
+		 resultPanel.add(resultScrollPane);
+		// JLabel resultlabel = new JLabel("result here");
+		 //resultPanel.add(resultlabel);
 		 resultPanel.updateUI();
 	 }
 	 
