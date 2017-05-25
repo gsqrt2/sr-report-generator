@@ -49,8 +49,16 @@ public class DataRetriever {
 				 readXlsxData();
 				 parentObject.disableActions(false);
 				 parentObject.setStatus("Status");
-				 parentObject.handInRetrievedArraylist(ttlpArraylist);
-				 parentObject.showReport();
+				 if(success)
+				 {
+					 parentObject.handInRetrievedArraylist(ttlpArraylist);
+					 parentObject.showReport();
+				 }
+				 else
+				 {
+					 parentObject.resetResultPanel();
+				 }
+				 success = true;
 			 }
 		 });
 		 
@@ -192,6 +200,7 @@ public class DataRetriever {
             if(!validXlsxFormat)
             {
             	JOptionPane.showMessageDialog(null, "Η δομή του αρχείου δεν είναι η αναμένόμενη, παρακαλώ επιλέξτε κατάλληλο αρχείο.");
+            	success = false;
             	validXlsxFormat = true;
             }
 
@@ -238,6 +247,7 @@ public class DataRetriever {
 		catch(Exception e)
 		{
 			System.out.println("Exception reading structure: "+e);
+			success = false;
 		}
 	}
 	
@@ -294,6 +304,7 @@ public class DataRetriever {
 		catch(Exception e)
 		{
 			System.out.println("Exception reading xml file "+xmlFileName+": "+e);
+			success = false;
 			return null;
 		}
 	}
@@ -380,7 +391,7 @@ public class DataRetriever {
 	private SrReportGenerator parentObject;
 
 	private File dataFile;
-	private boolean headersRow = true, validXlsxFormat = true, ignoreRecord = false;
+	private boolean headersRow = true, validXlsxFormat = true, ignoreRecord = false, success = true;
 	private HashMap<String,String> additionalLocationsHash, taskTypesHash;
 	private HashMap<String,Ttlp> islandToTtlpHash;
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;

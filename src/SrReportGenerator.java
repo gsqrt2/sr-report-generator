@@ -52,7 +52,8 @@ public class SrReportGenerator {
 				  if(returnVal == JFileChooser.APPROVE_OPTION) {
 					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
 					  fileToParse = fileChooser.getSelectedFile();
-					  
+					  resultPanel.removeAll();
+					  resultPanel.updateUI();
 					  if(dataRetriever == null)
 					  {
 						  dataRetriever = new DataRetriever(srReportGenerator);
@@ -175,17 +176,16 @@ public class SrReportGenerator {
 	 
 	 public void showReport()
 	 {
-		 resultPanel.remove(progressPanel);
+		 
+		 resultPanel.removeAll();
 		 parserProgressBar = null;
 		 progressPanel = null;
-		 
+		 resultPanel.setLayout(new BorderLayout());
 		 ReportGenerator reportGenerator = new ReportGenerator(retrievedArraylist);
-		 JTable resultsTable = reportGenerator.getResults();
-		 JScrollPane resultScrollPane = new JScrollPane();
-		 resultScrollPane.add(resultsTable);
-		 resultPanel.add(resultScrollPane);
-		// JLabel resultlabel = new JLabel("result here");
-		 //resultPanel.add(resultlabel);
+		 JPanel reportPanel = reportGenerator.getResults();	
+		 
+		 resultPanel.add(reportPanel, BorderLayout.CENTER);
+
 		 resultPanel.updateUI();
 	 }
 	 
@@ -193,6 +193,12 @@ public class SrReportGenerator {
 	 {
 		 retrievedArraylist = new ArrayList<Ttlp>();
 		 retrievedArraylist = resultArraylist;
+	 }
+	 
+	 public void resetResultPanel()
+	 {
+		 resultPanel.removeAll();
+		 resultPanel.updateUI();
 	 }
 
 	 
