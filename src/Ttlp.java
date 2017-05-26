@@ -55,8 +55,13 @@ public class Ttlp {
 			data[i] = currentObject;
 		}
 		ttlpReportTable = new JTable(data, columnNames);
+		//ttlpReportTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
+		//ttlpReportTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+		//ttlpReportTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+		//ttlpReportTable.getColumnModel().getColumn(2).setPreferredWidth(65);
+		//ttlpReportTable.getColumnModel().getColumn(3).setPreferredWidth(90);
 		ttlpReportTable.setColumnSelectionAllowed(false);
-		ttlpReportTable.getTableHeader().setResizingAllowed(false);
+		//ttlpReportTable.getTableHeader().setResizingAllowed(false);
 		ttlpReportTable.getTableHeader().setReorderingAllowed(false);
 		
 		JScrollPane tableScrollPane = new JScrollPane(ttlpReportTable);
