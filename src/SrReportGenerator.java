@@ -41,7 +41,7 @@ public class SrReportGenerator {
 		filePanel = new JPanel(new FlowLayout());
 		filePathTextField = new JTextField("Select xlsx file to parse");
 		filePathTextField.setEnabled(false);
-		filePathTextField.setColumns(50);
+		filePathTextField.setColumns(20);
 		chooseFileButton = new JButton("Select File");
 		fileChooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("xlsx files", "xlsx");
@@ -50,7 +50,11 @@ public class SrReportGenerator {
 			  public void actionPerformed(ActionEvent e) { 
 				  int returnVal = fileChooser.showOpenDialog(frame);
 				  if(returnVal == JFileChooser.APPROVE_OPTION) {
-					  filePathTextField.setText(fileChooser.getSelectedFile().toString());
+					  String[] fileNameArray = fileChooser.getSelectedFile().toString().split("\\\\");
+					  String fileName = fileNameArray[fileNameArray.length-1];
+					  int remainingDigits = 30-fileName.length();
+					  
+					  filePathTextField.setText("lala");
 					  fileToParse = fileChooser.getSelectedFile();
 					  resultPanel.removeAll();
 					  resultPanel.updateUI();
