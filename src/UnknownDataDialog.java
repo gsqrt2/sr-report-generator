@@ -3,10 +3,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.PopupMenuEvent;
+
+
 import javax.swing.DefaultComboBoxModel;
 
 
@@ -17,6 +15,8 @@ public class UnknownDataDialog extends JDialog{
 		this.dataString = dataString;
 		this.dataType = dataType;
 		this.parentDataRetriever = parentDataRetriever;
+		thisDialog = this;
+
 		
 		if(dataType == "location")
 		{
@@ -41,36 +41,87 @@ public class UnknownDataDialog extends JDialog{
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		chooseLocationPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		
-		Ttlp dummyTtlp = new Ttlp("Επιλέξτε ΤΤΛΠ");
-		Ttlp.IslandTy dummyTy = dummyTtlp.addTy("Επιλέξτε Τ/Υ");
+		Ttlp dummyTtlp = new Ttlp("Επιλέξτε ΤΤΛΠ:");
+		Ttlp ignoreTtlp = new Ttlp("Να αγνοείται πάντα αυτή η εγγραφή");
+		Ttlp.IslandTy dummyTy = dummyTtlp.addTy("Επιλέξτε Τ/Υ:");
+		Ttlp.IslandTy[] tyArray = new Ttlp.IslandTy[1];
+		tyArray[0] = dummyTy;
 		Ttlp[] ttlpArray = parentDataRetriever.getTtplStructure();
 		
-		Ttlp[] finalTtlpArray = new Ttlp[ttlpArray.length+1];
+		Ttlp[] finalTtlpArray = new Ttlp[ttlpArray.length+2];
 		finalTtlpArray[0] = dummyTtlp;
-		for(int i=1;i<finalTtlpArray.length;i++)
-			finalTtlpArray[i] = ttlpArray[i-1];
+		finalTtlpArray[1] = ignoreTtlp;
+		for(int i=2;i<finalTtlpArray.length;i++)
+			finalTtlpArray[i] = ttlpArray[i-2];
 
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		textPanel.add(new JLabel("Παρακαλώ καθορίστε σε ποιά Τ/Υ ανήκει η άγνωστη περιοχή '"+dataString+"':"));
 		
-		ttlpComboBox = new JComboBox(finalTtlpArray);
+		ttlpComboBox = new JComboBox<Ttlp>(finalTtlpArray);
+		ttlpComboBox.addActionListener(
+                new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                    	
+                    	Ttlp.IslandTy dummyTy = dummyTtlp.addTy("Επιλέξτε Τ/Υ");
+                    	Ttlp.IslandTy[] tyArray = new Ttlp.IslandTy[1];
+                		tyArray[0] = dummyTy;
+                		DefaultComboBoxModel<Ttlp.IslandTy> dummyModel = new DefaultComboBoxModel<Ttlp.IslandTy>(tyArray);
+                    		
+                        if(ttlpComboBox.getSelectedIndex() == 0)
+                        {
+                        	tyComboBox.setModel(dummyModel);
+                        	tyComboBox.setEnabled(false);
+                        	okButton.setEnabled(false);
+                        }
+                        else
+                        if(ttlpComboBox.getSelectedIndex() == 1)
+                        {
+                        	tyComboBox.setModel(dummyModel);
+                        	tyComboBox.setEnabled(false);
+                        	okButton.setEnabled(true);
+                        }
+                        else
+                        {
+                        	Ttlp selectedTtlp = (Ttlp) ttlpComboBox.getSelectedItem();
+                        	System.out.println(selectedTtlp.toString());
+                        	DefaultComboBoxModel model = new DefaultComboBoxModel(selectedTtlp.getListOfTys().toArray());
+                        	tyComboBox.setModel(model);
+                        	tyComboBox.setEnabled(true);
+                        	okButton.setEnabled(true);
+                        }
+                    }
+                }            
+        );
 		chooseLocationPanel.add(ttlpComboBox);
-
-
+		
+		
+		tyComboBox = new JComboBox<Ttlp.IslandTy>(tyArray);
+		tyComboBox.setEnabled(false);
+		chooseLocationPanel.add(tyComboBox);
 	
 		
-		okButton = new JButton("Ok");
+		okButton = new JButton("Καταχώρηση");
+		okButton.setEnabled(false);
+		ignoreButton = new JButton("Όχι τώρα");
+		ignoreButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				thisDialog.setVisible(false);
+				thisDialog.dispose();
+			}
+		});
+		
 		buttonPanel.add(okButton);
+		buttonPanel.add(ignoreButton);
 		mainPanel.add(textPanel);
 		mainPanel.add(chooseLocationPanel);
-		//mainPanel.add(buttonPanel);
+		mainPanel.add(buttonPanel);
 		this.add(mainPanel);
 		//mainPanel.setPreferredSize(new Dimension(550,250));
 
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	
 	}
 	
@@ -83,10 +134,11 @@ public class UnknownDataDialog extends JDialog{
 	
 	private String dataString, dataType;
 	private JPanel textPanel, mainPanel, buttonPanel, chooseLocationPanel;
-	private JButton okButton;
+	private JButton okButton, ignoreButton;
 	private DataRetriever parentDataRetriever;
-
 	private JComboBox<Ttlp> ttlpComboBox;
 	private JComboBox<Ttlp.IslandTy> tyComboBox;
+	private UnknownDataDialog thisDialog;
+
 
 }

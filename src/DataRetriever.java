@@ -147,7 +147,7 @@ public class DataRetriever {
                 		else
                 		{
                 			//System.out.println("handle uknown location: "+currentIsland);
-                			//new UnknownDataDialog(currentIsland, "location", this);
+                			unknownDataDialog = new UnknownDataDialog(currentIsland, "location", this);
                 			ignoreRecord = true;
                 			/*NA TO VGALW OTAN FTIAKSW TO HANDLE*/
                 		}
@@ -385,7 +385,7 @@ public class DataRetriever {
 	}
 	
 
-	
+
 
 
 	private SrReportGenerator parentObject;
@@ -397,6 +397,7 @@ public class DataRetriever {
 	private Integer islandCol, appointmentDateCol, taskTypeCol, statusCol;
 	private ArrayList<Ttlp> ttlpArraylist;
 	private HashMap<String, Ttlp> ttlpHash;
+	private UnknownDataDialog unknownDataDialog;
 
 
 
