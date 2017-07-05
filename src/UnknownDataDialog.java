@@ -105,6 +105,7 @@ public class UnknownDataDialog extends JDialog{
 		ignoreButton = new JButton("Όχι τώρα");
 		ignoreButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
+				parentDataRetriever.addUnknownLocation(dataString, "ignore", false);
 				thisDialog.setVisible(false);
 				thisDialog.dispose();
 			}

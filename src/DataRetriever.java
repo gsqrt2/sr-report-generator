@@ -18,6 +18,11 @@ import org.apache.poi.ss.usermodel.Row;
 //import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 
 public class DataRetriever {
@@ -282,6 +287,29 @@ public class DataRetriever {
 		catch(Exception e)
 		{
 			System.out.println("Exception reading additional locaions: "+e);
+		}
+	}
+	
+	public void addUnknownLocation(String newLocation, String parent, boolean permenant)
+	{
+		additionalLocationsHash.put(newLocation, parent);
+		System.out.println("ignored "+newLocation);
+		if(permenant)
+		{
+			Node additionalLocationRootNode = getRootNodeFromXml("additional.xml");
+			Document doc = additionalLocationRootNode.getOwnerDocument();
+			Element newLocationElement = doc.createElement("location");
+			newLocationElement.setAttribute("name", newLocation);
+			newLocationElement.setAttribute("parent", "ignore");
+			additionalLocationRootNode.appendChild(newLocationElement);
+			
+			try{
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(new File("data/additional.xml"));
+				transformer.transform(source, result);
+			}catch(TransformerException tfe){System.out.println("Xml write TransformerException: "+tfe);}
 		}
 	}
 	
