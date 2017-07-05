@@ -3,8 +3,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-
+import javax.swing.border.*;
 import javax.swing.DefaultComboBoxModel;
 
 
@@ -27,8 +26,13 @@ public class UnknownDataDialog extends JDialog{
 		if(dataType == "taskType")
 		{
 			this.setTitle("’γνωστος τύπος έργασίας: '"+dataString+"'");		
-			//initGui();
+			initTaskTypeGui();
 		}
+	}
+	
+	private void initTaskTypeGui()
+	{
+		System.out.println("ksekinaei to task type gui");
 	}
 	
 	private void initLocationGui()
@@ -55,7 +59,12 @@ public class UnknownDataDialog extends JDialog{
 			finalTtlpArray[i] = ttlpArray[i-2];
 
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		textPanel.add(new JLabel("Παρακαλώ καθορίστε σε ποιά Τ/Υ ανήκει η άγνωστη περιοχή '"+dataString+"':"));
+		JLabel unknownLocationLabel = new JLabel("Παρακαλώ καθορίστε σε ποιά Τ/Υ ανήκει η άγνωστη περιοχή '"+dataString+"':");
+		Border border = unknownLocationLabel.getBorder();
+		Border margin = new EmptyBorder(10,10,10,10);
+		unknownLocationLabel.setBorder(new CompoundBorder(border, margin));
+		textPanel.add(unknownLocationLabel);
+		
 		
 		ttlpComboBox = new JComboBox<Ttlp>(finalTtlpArray);
 		ttlpComboBox.addActionListener(
@@ -101,6 +110,22 @@ public class UnknownDataDialog extends JDialog{
 	
 		
 		okButton = new JButton("Καταχώρηση");
+		okButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				if(ttlpComboBox.getSelectedIndex() == 1)
+				{
+					parentDataRetriever.addUnknownLocation(dataString, "ignore", true);
+				}
+				else
+				{
+					parentDataRetriever.addUnknownLocation(dataString, tyComboBox.getSelectedItem().toString(), true);
+				}
+				System.out.println(tyComboBox.getSelectedItem().toString());
+				
+				thisDialog.setVisible(false);
+				thisDialog.dispose();
+			}
+		});
 		okButton.setEnabled(false);
 		ignoreButton = new JButton("Όχι τώρα");
 		ignoreButton.addActionListener(new ActionListener(){

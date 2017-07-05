@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.awt.GridBagLayout;
@@ -68,8 +69,11 @@ public class SrReportGenerator {
 				  }
 			  } 
 			} );
+		JLabel xlsxFileLabel = new JLabel("Report file: ");
+		filePanel.add(xlsxFileLabel);
 		filePanel.add(filePathTextField);
 		filePanel.add(chooseFileButton);
+		
 		
 		/*init resultPanel*/
 		resultPanel = new JPanel();
@@ -83,8 +87,20 @@ public class SrReportGenerator {
 		statusLabel = new JLabel("Status");
 		statusPanel.add(statusLabel);
 		
+		/*Assemple sendPanel*/
+		sendPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		sendButton = new JButton("Send");
+		sendPanel.add(sendButton);
+		
+		/*Assemple top panel*/
+		topPanel = new JPanel(new BorderLayout());
+		filePanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		topPanel.add(filePanel, BorderLayout.LINE_START);
+		sendPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		topPanel.add(sendPanel, BorderLayout.LINE_END);
+		
 		/*Assemble main panel*/
-		mainPanel.add(filePanel,  BorderLayout.PAGE_START);
+		mainPanel.add(topPanel,  BorderLayout.PAGE_START);
 		mainPanel.add(resultPanel, BorderLayout.CENTER);
 		mainPanel.add(statusPanel, BorderLayout.PAGE_END);
 		
@@ -207,8 +223,8 @@ public class SrReportGenerator {
 
 	 
 	 private JFrame frame;
-	 private JPanel mainPanel, filePanel, resultPanel, statusPanel, progressPanel;
-	 private JButton chooseFileButton;
+	 private JPanel mainPanel, filePanel, resultPanel, statusPanel, progressPanel, sendPanel, topPanel;
+	 private JButton chooseFileButton, sendButton;
 	 private JTextField filePathTextField;
 	 private JFileChooser fileChooser;
 	 private File fileToParse;

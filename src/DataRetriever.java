@@ -23,6 +23,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
 
 
 public class DataRetriever {
@@ -300,12 +301,14 @@ public class DataRetriever {
 			Document doc = additionalLocationRootNode.getOwnerDocument();
 			Element newLocationElement = doc.createElement("location");
 			newLocationElement.setAttribute("name", newLocation);
-			newLocationElement.setAttribute("parent", "ignore");
+			newLocationElement.setAttribute("parent", parent);
 			additionalLocationRootNode.appendChild(newLocationElement);
 			
 			try{
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
 				Transformer transformer = transformerFactory.newTransformer();
+				transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 				DOMSource source = new DOMSource(doc);
 				StreamResult result = new StreamResult(new File("data/additional.xml"));
 				transformer.transform(source, result);
