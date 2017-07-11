@@ -1,0 +1,7 @@
+/*Email sender settings*/
+
+emailSenderAccount = 
+emailSenderAccountPassword = 
+emailSmtpHost = 
+emailSmtpPort = 
+emailSmtpAuth = 

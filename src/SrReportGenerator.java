@@ -16,21 +16,57 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.Dimension;
-
 import java.util.ArrayList;
-
 import org.w3c.dom.Document;
-
 import org.w3c.dom.Element;
+import java.util.Properties;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 
 public class SrReportGenerator {
 
 	public SrReportGenerator(){
+		
+		loadProperties();
 		frameInit();
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
 		srReportGenerator = new SrReportGenerator();
+	}
+	
+	private void loadProperties()
+	{
+		configProperties = new Properties();
+		FileInputStream input = null;
+		
+		try
+		{
+			input = new FileInputStream("config");
+			configProperties.load(input);
+			System.out.println(configProperties.getProperty("name"));
+		}
+		catch(IOException ex)
+		{
+			System.out.println("Exception loading config file: "+ex);
+			ex.printStackTrace();
+		}
+		finally
+		{
+			if(input != null) 
+			{
+				try
+				{
+					input.close();
+				}
+				catch(IOException e){
+					System.out.println("Exception closing config file: "+e);
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	 private void frameInit(){
@@ -234,4 +270,5 @@ public class SrReportGenerator {
 	 private JProgressBar parserProgressBar;
 	 private ArrayList<Ttlp> retrievedArraylist = null;
 	 public static SrReportGenerator srReportGenerator;
+	 private Properties configProperties;
 }
