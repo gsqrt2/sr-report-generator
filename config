@@ -1,6 +1,6 @@
 /*Email sender settings*/
 
-emailSenderAccount = srreporthandler@gmail.com
+emailSenderAccount = 
 emailSenderAccountPassword = 
 emailSmtpHost = 
 emailSmtpPort = 
