@@ -37,6 +37,13 @@ public class SrReportGenerator {
 		srReportGenerator = new SrReportGenerator();
 	}
 	
+	public String getConfigProperty(String propertyName)
+	{
+		String propertyValue = null;
+		propertyValue = configProperties.getProperty(propertyName);
+		return propertyValue;
+	}
+	
 	private void loadProperties()
 	{
 		configProperties = new Properties();
@@ -46,7 +53,6 @@ public class SrReportGenerator {
 		{
 			input = new FileInputStream("config");
 			configProperties.load(input);
-			System.out.println(configProperties.getProperty("name"));
 		}
 		catch(IOException ex)
 		{
@@ -166,7 +172,7 @@ public class SrReportGenerator {
 		 		+ "</table>";
 		 if(sendMailSSL == null)
 		 {	 
-			 sendMailSSL = new SendMailSSL();
+			 sendMailSSL = new SendMailSSL(this);
 		 }
 
 		 sendMailSSL.sendMail(htmlText, "gsqrt2@gmail.com");
