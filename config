@@ -1,7 +1,7 @@
 /*Email sender settings*/
 
-emailSenderAccount = 
-emailSenderAccountPassword = 
-emailSmtpHost = 
-emailSmtpPort = 
-emailSmtpAuth = 
+emailSenderAccount = srreporthandler@gmail.com
+emailSenderAccountPassword = !@ote123!@#
+emailSmtpHost = smtp.gmail.com
+emailSmtpPort = 465
+emailSmtpAuth = true
