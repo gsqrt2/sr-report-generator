@@ -107,8 +107,6 @@ public class DataRetriever {
                 	ignoreRecord = false;
                 	parentObject.setProgressBarValue(currentRow);
                 	parentObject.setProgressBarString("Εγγραφή "+currentRow+" από "+allRows);
-                	/*ta mdf kai ta pedia metrane gia mia i gia dyo tasks? 
-                	 * xreiazomai paradeigma apo alloy eidoys douleies opws syndyastika rantevou, ipvpn kai kalwdiakes an metrane*/
                 	
                 	/* CHECK LOCATION AND HANDLE IF UNRECOGNIZED*/
 
@@ -130,7 +128,7 @@ public class DataRetriever {
                 		{
                 			//System.out.println(currentIsland+" found in "+additionalLocationsHash.get(currentIsland));
                 			String currentTyFromAdditional = additionalLocationsHash.get(currentIsland);
-                			if(additionalLocationsHash.get(currentIsland) != "ignore")
+                			if(currentTyFromAdditional != "ignore")
                 			{
                 				if(islandToTtlpHash.get(currentTyFromAdditional) != null)
                 				{
@@ -142,7 +140,7 @@ public class DataRetriever {
                 				{
                 					/*to parent apo to additional location entry de vrethike sto main structure*/
                 					ignoreRecord = true;
-                					System.out.println("Η περιοχή '"+currentTyFromAdditional+"' δεν ανήκει στη βασική δομή.");
+                					//System.out.println("Η περιοχή '"+currentTyFromAdditional+"' βρέθηκε στα additional locations αλλά αγνοείται.");
                 				}
                 			}
                 			else
@@ -154,47 +152,54 @@ public class DataRetriever {
                 		{
                 			//System.out.println("handle uknown location: "+currentIsland);
                 			unknownDataDialog = new UnknownDataDialog(currentIsland, "location", this);
-                			ignoreRecord = true;
-                			/*NA TO VGALW OTAN FTIAKSW TO HANDLE*/
+                			
+                			String currentTyFromAdditional = additionalLocationsHash.get(currentIsland);
+        					if(currentTyFromAdditional == "ignore" || currentTyFromAdditional == null)
+        					{
+        						ignoreRecord = true;
+        					}
+        					else
+        					{
+        						currentTtlp = islandToTtlpHash.get(currentTyFromAdditional);
+            					currentTy = currentTyFromAdditional;
+        					}
                 		}
                 		
                 	}
-                		//if(!ignoreRecord)
-                			//System.out.println("checking task type for ttlp: "+currentTtlp.toString()+", ty: "+currentTy);
                 	
                 	/* CHECK TASK TYPE AND HANDLE IF UNRECOGNIZED*/
                 	if(!ignoreRecord)
                 	{
 	                	String currentTaskTypeDescription = (String) row.getCell(taskTypeCol).toString();
 	                	String currentTaskType = (String) taskTypesHash.get(currentTaskTypeDescription);
-	                	
-	                	if(currentTaskType.equals("connection"))
+	                	if(currentTaskType == null)
 	                	{
-	                		//System.out.println("new connection");
-	                		//System.out.println("requesting ty object for :"+currentTy);
-	                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
-	                		currentIslandTyObject.increaseConnections();
-	                		if(currentTy == "ΠΟΡΟΣ - ΜΕΘΑΝΑ")
-	                			System.out.println("poros methana at :"+currentRow);
-	                	}
-	                	else
-	                	if(currentTaskType.equals("service"))
-	                	{
-	                		//System.out.println("new service");
-	                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
-	                		currentIslandTyObject.increaseServices();
-	                		//if(currentTy.toString().equals("ΠΟΡΟΣ - ΜΕΘΑΝΑ"))
-	                			//System.out.println("poros - methana service at :"+currentRow);
-	                	}
-	                	else
-	                	if(currentTaskType.equals("ignore"))
-	                	{
-	                		//System.out.println("IGNORED!!!!");
+	                		System.out.println("Unrecognized task type: '"+currentTaskTypeDescription+"', at row "+currentRow);
+	                		new UnknownDataDialog(currentTaskTypeDescription, "taskType", this);
 	                	}
 	                	else
 	                	{
-	                		System.out.println("Unrecognized task type: '"+currentTaskType+"', at row "+currentRow);
-	                		//new UnknownDataDialog(currentTaskType, "taskType", this);
+	                		if(currentTaskType.equals("connection"))
+		                	{
+		                		//System.out.println("new connection");
+		                		//System.out.println("requesting ty object for :"+currentTy);
+		                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
+		                		currentIslandTyObject.increaseConnections();
+		                	}
+		                	else
+		                	if(currentTaskType.equals("service"))
+		                	{
+		                		//System.out.println("new service");
+		                		Ttlp.IslandTy currentIslandTyObject = currentTtlp.getTyByName(currentTy);
+		                		currentIslandTyObject.increaseServices();
+		                		//if(currentTy.toString().equals("ΠΟΡΟΣ - ΜΕΘΑΝΑ"))
+		                			//System.out.println("poros - methana service at :"+currentRow);
+		                	}
+		                	else
+		                	if(currentTaskType.equals("ignore"))
+		                	{
+		                		//System.out.println("IGNORED!!!!");
+		                	}
 	                	}
                 	}
                 }
@@ -291,10 +296,14 @@ public class DataRetriever {
 		}
 	}
 	
+	public void addUnknownTaskType(String newTaskTypeDescription, String newTaskType, boolean permenant)
+	{
+		
+	}
+	
 	public void addUnknownLocation(String newLocation, String parent, boolean permenant)
 	{
 		additionalLocationsHash.put(newLocation, parent);
-		System.out.println("ignored "+newLocation);
 		if(permenant)
 		{
 			Node additionalLocationRootNode = getRootNodeFromXml("additional.xml");

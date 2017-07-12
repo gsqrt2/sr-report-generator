@@ -3,6 +3,6 @@
 <location name="ΤΡΟΙΖΗΝΑ" parent="ΠΟΡΟΣ - ΜΕΘΑΝΑ"/>
 <location name="ΜΕΘΑΝΑ" parent="ΠΟΡΟΣ - ΜΕΘΑΝΑ"/>
 <location name="ΠΟΡΟΣ" parent="ΠΟΡΟΣ - ΜΕΘΑΝΑ"/>
-<location name="ΓΑΛΑΤΑΣ" parent="ΠΟΡΟΣ - ΜΕΘΑΝΑ"/>
 <location name="Not Found" parent="ignore"/>
+<location name="ΓΑΛΑΤΑΣ" parent="ΠΟΡΟΣ - ΜΕΘΑΝΑ"/>
 </additional>

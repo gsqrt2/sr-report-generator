@@ -14,7 +14,6 @@
 	<task name="ΜΕΤΑΤΡΟΠΗ IP" type="connection"/>
 	<task name="ΜΤΦ" type="connection"/>
 	<task name="Ν.Σ. ΤΗΛΕΦΩΝΙΑΣ" type="connection"/>
-	<task name="ΑΛΛΑΓΗ ΠΑΡΟΧΟΥ (MDF)" type="connection"/>
 	<task name="ΕΠΙ ΤΟΠΟΥ ΠΡΟΜΕΤΡΗΣΗ (LLU)" type="ignore"/>
 	<task name="ΚΑΤΑΡΓΗΣΗ ΒΡΟΧΟΥ (MDF)" type="connection"/>
 	<task name="ΚΑΤΑΣΚΕΥΗ ΒΡΟΧΟΥ" type="connection"/>

@@ -12,7 +12,6 @@ public class UnknownDataDialog extends JDialog{
 	{
 		this.setModal(true);
 		this.dataString = dataString;
-		this.dataType = dataType;
 		this.parentDataRetriever = parentDataRetriever;
 		thisDialog = this;
 
@@ -32,7 +31,78 @@ public class UnknownDataDialog extends JDialog{
 	
 	private void initTaskTypeGui()
 	{
-		System.out.println("ksekinaei to task type gui");
+		this.setResizable(false);
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		textPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		chooseTaskTypePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		
+		JLabel unknownTaskTypeLabel = new JLabel("Παρακαλώ καθορίστε πώς προσμετρούνται οι εργασίες τύπου '"+dataString+"'");
+		textPanel.add(unknownTaskTypeLabel);
+		
+		String[] taskTypeArray = {"Επιλέξτε τύπο εργασίας:", "Να αγνοούνται αυτές οι εργασίες", "Κατασκευή", "Βλάβη"};
+		taskTypeComboBox = new JComboBox<String>(taskTypeArray);
+		taskTypeComboBox.addActionListener(
+                new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        if(taskTypeComboBox.getSelectedIndex() == 0)
+                        {
+                        	okButton.setEnabled(false);
+                        }
+                        else
+                        {
+                        	okButton.setEnabled(true);
+                        }
+                    }
+                }            
+        );
+		chooseTaskTypePanel.add(taskTypeComboBox);
+		
+		mainPanel.add(textPanel);
+		mainPanel.add(chooseTaskTypePanel);
+		
+		okButton = new JButton("Καταχώρηση");
+		okButton.setEnabled(false);
+		okButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				if(taskTypeComboBox.getSelectedIndex() == 1)
+				{
+					parentDataRetriever.addUnknownTaskType(dataString, "ignore", true);
+					System.out.println("always ignore");
+				}
+				else
+				{
+					parentDataRetriever.addUnknownTaskType(dataString, taskTypeComboBox.getSelectedItem().toString(), true);
+					System.out.println("count as: "+taskTypeComboBox.getSelectedItem().toString());
+				}
+				
+				//thisDialog.setVisible(false);
+				//thisDialog.dispose();
+			}
+		});
+		
+		ignoreButton = new JButton("Όχι τώρα");
+		ignoreButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				parentDataRetriever.addUnknownTaskType(dataString, "ignore", false);
+				//thisDialog.setVisible(false);
+				//thisDialog.dispose();
+				System.out.println("ignore once");
+			}
+		});
+		
+		buttonPanel.add(okButton);
+		buttonPanel.add(ignoreButton);
+		
+		mainPanel.add(buttonPanel);
+
+		this.add(mainPanel);
+		
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	
 	private void initLocationGui()
@@ -92,7 +162,7 @@ public class UnknownDataDialog extends JDialog{
                         else
                         {
                         	Ttlp selectedTtlp = (Ttlp) ttlpComboBox.getSelectedItem();
-                        	System.out.println(selectedTtlp.toString());
+                        	//System.out.println(selectedTtlp.toString());
                         	DefaultComboBoxModel model = new DefaultComboBoxModel(selectedTtlp.getListOfTys().toArray());
                         	tyComboBox.setModel(model);
                         	tyComboBox.setEnabled(true);
@@ -120,7 +190,7 @@ public class UnknownDataDialog extends JDialog{
 				{
 					parentDataRetriever.addUnknownLocation(dataString, tyComboBox.getSelectedItem().toString(), true);
 				}
-				System.out.println(tyComboBox.getSelectedItem().toString());
+				//System.out.println(tyComboBox.getSelectedItem().toString());
 				
 				thisDialog.setVisible(false);
 				thisDialog.dispose();
@@ -158,12 +228,13 @@ public class UnknownDataDialog extends JDialog{
 	
 	
 	
-	private String dataString, dataType;
-	private JPanel textPanel, mainPanel, buttonPanel, chooseLocationPanel;
+	private String dataString;
+	private JPanel textPanel, mainPanel, buttonPanel, chooseLocationPanel, chooseTaskTypePanel;
 	private JButton okButton, ignoreButton;
 	private DataRetriever parentDataRetriever;
 	private JComboBox<Ttlp> ttlpComboBox;
 	private JComboBox<Ttlp.IslandTy> tyComboBox;
+	private JComboBox<String> taskTypeComboBox;
 	private UnknownDataDialog thisDialog;
 
 
